@@ -252,6 +252,8 @@
     d.expenses = d.expenses.filter(function (e) { return !e.o; }); // eski sürümden kalan kayıtlar
     if (!d.periodBudgets) d.periodBudgets = {};
     if (!d.since) d.since = midnight(new Date()).getTime();       // takibe başlanan gün
+    // Artanın devretmeye başladığı dönem: bu sürümün ilk açıldığı dönem
+    if (!d.carryFrom && d.startDay) d.carryFrom = period(midnight(new Date()), d.startDay).start.getTime();
     return d;
   }
   function save() {
@@ -267,21 +269,24 @@
     return s;
   }
 
-  // Dönemin bütçesi: aylık (ya da o döneme özel) bütçe − önceki dönemin aşımı.
-  // Önceki dönemde artan para devretmez (borca gider), sadece bilgi olarak gösterilir.
+  // Dönemin bütçesi: aylık (ya da o döneme özel) bütçe + önceki dönemden devreden.
+  // Aşım her zaman sonraki dönemden düşer. Artan para yalnızca state.carryFrom
+  // ile başlayan dönemlerden itibaren devreder (öncesinde borca gidiyordu).
   // Takibe başlanan dönemden bugünkü döneme kadar her dönem (en eskisi başta)
   function history() {
     var today = midnight(new Date());
     var p = period(midnight(new Date(Math.min(state.since, today.getTime()))), state.startDay);
-    var list = [], over = 0;
+    var list = [], carry = 0;
     for (var i = 0; i < 240 && p.start <= today; i++) {
       var base = state.periodBudgets[p.start.getTime()] > 0 ? state.periodBudgets[p.start.getTime()] : state.budget;
-      var budget = base - over;
+      var budget = base + carry;
       var from = Math.max(p.start.getTime(), state.since);
       var spent = spentBetween(from, p.next.getTime());
+      var carriesSaving = p.start.getTime() >= state.carryFrom;
       list.push({ start: p.start, from: new Date(from), end: new Date(p.next.getTime() - DAY),
-                  budget: budget, carried: over, spent: spent, current: p.next > today });
-      over = Math.max(0, spent - budget);
+                  base: base, budget: budget, carried: carry, spent: spent,
+                  carriesSaving: carriesSaving, current: p.next > today });
+      carry = spent > budget ? budget - spent : (carriesSaving ? budget - spent : 0);
       p = period(p.next, state.startDay);
     }
     return list;
@@ -291,8 +296,19 @@
     var h = history();
     var cur = h[h.length - 1];
     var prev = h[h.length - 2];
-    if (!cur || cur.start.getTime() !== target.getTime()) return { budget: state.budget, over: 0, saved: 0 };
-    return { budget: cur.budget, over: cur.carried, saved: prev ? Math.max(0, prev.budget - prev.spent) : 0 };
+    if (!cur || cur.start.getTime() !== target.getTime()) return { budget: state.budget, carried: 0, saved: 0 };
+    return { budget: cur.budget, carried: cur.carried,
+             saved: prev && !prev.carriesSaving ? Math.max(0, prev.budget - prev.spent) : 0 };
+  }
+
+  // Bu yıl biten dönemlerin bütçe toplamı − harcanan toplamı (devreden para iki kez sayılmaz)
+  function yearSaving() {
+    var y = new Date().getFullYear(), base = 0, spent = 0, n = 0;
+    history().forEach(function (h) {
+      if (h.current || h.end.getFullYear() !== y) return;
+      base += h.base; spent += h.spent; n++;
+    });
+    return { year: y, amount: base - spent, periods: n };
   }
 
   function compute() {
@@ -329,7 +345,7 @@
       due: due,
       periodStart: p.start,
       custom: custom,
-      over: pb.over,
+      carried: pb.carried,
       saved: pb.saved
     };
   }
@@ -355,7 +371,8 @@
 
     $('proj').innerHTML = 'Bu gidişle ' + dateLoc(c.due) + ' ödeyeceğin ekstre <b>' + tl(c.projection) + '</b>.<br>' +
       '<span style="font-size:15px">Dönem sonu ' + dateTxt(c.end) + ' · ' + c.daysLeft + ' gün kaldı</span>' +
-      (c.over > 0 ? '<br><span style="font-size:15px">Geçen dönemden ' + tl(c.over) + ' aşım düşüldü.</span>'
+      (c.carried < 0 ? '<br><span style="font-size:15px">Geçen dönemden ' + tl(-c.carried) + ' aşım düşüldü.</span>'
+        : c.carried > 0 ? '<br><span style="font-size:15px">Geçen dönemden ' + tl(c.carried) + ' devretti.</span>'
         : c.saved > 0 ? '<br><span style="font-size:15px">Geçen dönem ' + tl(c.saved) + ' tasarruf ettin.</span>' : '');
 
     $('entry').textContent = typed ? typed + ' ₺' : 'Tutar';
@@ -428,16 +445,27 @@
         res = diff >= 0 ? '<div class="res good">Şimdilik ' + tl(diff) + ' kaldı</div>'
                         : '<div class="res bad">Şimdilik ' + tl(-diff) + ' aşıldı</div>';
       } else {
-        res = diff >= 0 ? '<div class="res good">' + tl(diff) + ' tasarruf</div>'
+        res = diff >= 0 ? '<div class="res good">' + tl(diff) + ' arttı' +
+                            (h.carriesSaving ? ' · sonraki döneme eklendi' : '') + '</div>'
                         : '<div class="res bad">' + tl(-diff) + ' aşım · sonraki dönemden düşüldü</div>';
       }
+      var note = h.carried < 0 ? ' <small>(' + tl(-h.carried) + ' aşım düşüldü)</small>'
+               : h.carried > 0 ? ' <small>(' + tl(h.carried) + ' devreden dahil)</small>' : '';
       return '<div class="card">' +
         '<div class="when">' + dateTxt(h.from) + ' – ' + dateTxt(h.end) + (h.current ? ' · devam ediyor' : '') + '</div>' +
-        row('Bütçe', tl(h.budget) + (h.carried > 0 ? ' <small>(' + tl(h.carried) + ' aşım düşüldü)</small>' : '')) +
+        row('Bütçe', tl(h.budget) + note) +
         row('Harcanan', tl(h.spent)) +
         res + '</div>';
     });
-    box.innerHTML = '<h3>Dönem özetleri</h3>' + cards.join('');
+    var ys = yearSaving();
+    var yearCard = '<div class="card"><div class="when">' + ys.year + ' toplam tasarruf</div>' +
+      (ys.periods === 0
+        ? '<div class="row"><span>Bu yıl henüz biten dönem yok</span></div>'
+        : '<div class="res ' + (ys.amount >= 0 ? 'good' : 'bad') + '" style="font-size:26px">' +
+            (ys.amount < 0 ? '−' : '') + tl(Math.abs(ys.amount)) + '</div>' +
+          '<div class="when" style="margin:4px 0 0">' + ys.periods + ' biten dönemin bütçesinden harcamadığın tutar</div>') +
+      '</div>';
+    box.innerHTML = '<h3>Dönem özetleri</h3>' + yearCard + cards.join('');
   }
 
   // ---- Ayarlar ----
@@ -480,6 +508,7 @@
 
     state.budget = b;
     state.startDay = sd;
+    if (!state.carryFrom) state.carryFrom = period(midnight(new Date()), sd).start.getTime();
     state.dueDay = dd;
     var ps = period(midnight(new Date()), sd).start.getTime();
     if (pb > 0) state.periodBudgets[ps] = pb; else delete state.periodBudgets[ps];
