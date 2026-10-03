@@ -200,6 +200,7 @@
     <div class="field">
       <label for="budget">Aylık bütçe (TL)</label>
       <input id="budget" type="text" inputmode="numeric">
+      <div class="hint">Değiştirirsen bu dönemden itibaren geçerli olur. Geçmiş dönemler eski bütçeyle kalır.</div>
     </div>
     <div class="field">
       <label for="startDay">Dönem başlangıç günü</label>
@@ -254,7 +255,19 @@
     if (!d.since) d.since = midnight(new Date()).getTime();       // takibe başlanan gün
     // Artanın devretmeye başladığı dönem: bu sürümün ilk açıldığı dönem
     if (!d.carryFrom && d.startDay) d.carryFrom = period(midnight(new Date()), d.startDay).start.getTime();
+    // Aylık bütçe geçmişi: [{from: dönem başı, amount}], eskiden yeniye.
+    // Eski sürümde tek bütçe vardı; o bütçe en baştan beri geçerli sayılır.
+    if (!Array.isArray(d.budgets)) d.budgets = d.budget > 0 ? [{ from: 0, amount: d.budget }] : [];
     return d;
+  }
+
+  // Bir dönemin temel bütçesi: o döneme özel bütçe, yoksa o tarihte geçerli aylık bütçe
+  function baseFor(pStart) {
+    var t = pStart.getTime();
+    if (state.periodBudgets[t] > 0) return state.periodBudgets[t];
+    var amount = state.budgets.length ? state.budgets[0].amount : state.budget;
+    state.budgets.forEach(function (b) { if (b.from <= t) amount = b.amount; });
+    return amount;
   }
   function save() {
     try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
@@ -278,7 +291,7 @@
     var p = period(midnight(new Date(Math.min(state.since, today.getTime()))), state.startDay);
     var list = [], carry = 0;
     for (var i = 0; i < 240 && p.start <= today; i++) {
-      var base = state.periodBudgets[p.start.getTime()] > 0 ? state.periodBudgets[p.start.getTime()] : state.budget;
+      var base = baseFor(p.start);
       var budget = base + carry;
       var from = Math.max(p.start.getTime(), state.since);
       var spent = spentBetween(from, p.next.getTime());
@@ -506,11 +519,16 @@
     if (!(dd >= 1 && dd <= 31)) { $('err').textContent = 'Son ödeme günü 1 ile 31 arasında olmalı.'; return; }
     if (pbRaw && !(pb > 0)) { $('err').textContent = 'Dönem bütçesi 0’dan büyük olmalı ya da boş kalmalı.'; return; }
 
-    state.budget = b;
     state.startDay = sd;
     if (!state.carryFrom) state.carryFrom = period(midnight(new Date()), sd).start.getTime();
     state.dueDay = dd;
     var ps = period(midnight(new Date()), sd).start.getTime();
+    // Yeni aylık bütçe bu dönemden itibaren geçerli; geçmiş dönemler eski bütçeyle kalır
+    if (b !== state.budget || !state.budgets.length) {
+      state.budgets = state.budgets.filter(function (x) { return x.from < ps; });
+      state.budgets.push({ from: state.budgets.length ? ps : 0, amount: b });
+    }
+    state.budget = b;
     if (pb > 0) state.periodBudgets[ps] = pb; else delete state.periodBudgets[ps];
     save();
     $('sheet').classList.remove('open');
