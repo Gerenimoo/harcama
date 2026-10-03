@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Bugün Ne Kadar</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Bugün">
+<meta name="theme-color" content="#f6f7f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111412" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<style>
+  :root {
+    --bg: #f6f7f5;
+    --surface: #ffffff;
+    --text: #151816;
+    --muted: #5f6762;
+    --accent: #1f8a5b;
+    --accent-text: #ffffff;
+    --danger: #c0392b;
+    --key: #e8ebe8;
+    --key-active: #d3d8d4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111412;
+      --surface: #1b1f1c;
+      --text: #f1f3f1;
+      --muted: #9aa39d;
+      --accent: #2fae76;
+      --accent-text: #08130d;
+      --danger: #ff6b5b;
+      --key: #252a26;
+      --key-active: #343a35;
+    }
+  }
+  /* Bugünkü pay eksiye düşünce tüm ekran kırmızı */
+  body.over {
+    --bg: #b3261e;
+    --surface: #8f1d17;
+    --text: #ffffff;
+    --muted: #ffd9d5;
+    --accent: #ffffff;
+    --accent-text: #b3261e;
+    --key: #c9443b;
+    --key-active: #a8332b;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-user-select: none; user-select: none;
+    overscroll-behavior: none;
+    transition: background-color .25s;
+  }
+  .app {
+    height: 100%;
+    display: flex; flex-direction: column;
+    padding: calc(env(safe-area-inset-top) + 8px) 16px calc(env(safe-area-inset-bottom) + 12px);
+    max-width: 480px; margin: 0 auto;
+  }
+  .top { display: flex; justify-content: flex-end; }
+  .icon-btn {
+    border: 0; background: transparent; color: var(--muted);
+    font-size: 28px; width: 48px; height: 48px; border-radius: 24px;
+  }
+  .hero { flex: 1; display: flex; flex-direction: column; justify-content: center; text-align: center; min-height: 0; }
+  .label { font-size: 18px; color: var(--muted); }
+  .big {
+    font-size: clamp(56px, 20vw, 100px); font-weight: 800; line-height: 1.05;
+    letter-spacing: -2px; font-variant-numeric: tabular-nums; margin: 4px 0 10px;
+    white-space: nowrap;
+  }
+  .big small { font-size: .5em; font-weight: 700; margin-left: 4px; }
+  .proj { font-size: 17px; color: var(--muted); line-height: 1.35; }
+  .proj b { color: var(--text); white-space: nowrap; }
+  .entry {
+    background: var(--surface); border-radius: 16px;
+    font-size: 40px; font-weight: 700; text-align: right;
+    padding: 10px 18px; min-height: 68px; margin: 8px 0 10px;
+    font-variant-numeric: tabular-nums;
+  }
+  .entry.empty { color: var(--muted); font-weight: 500; }
+  .pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .pad button {
+    border: 0; background: var(--key); color: var(--text);
+    font-size: 30px; font-weight: 600; height: 60px; border-radius: 14px;
+  }
+  .pad button:active { background: var(--key-active); }
+  .add {
+    margin-top: 10px; width: 100%; height: 72px; border: 0; border-radius: 18px;
+    background: var(--accent); color: var(--accent-text);
+    font-size: 26px; font-weight: 800; letter-spacing: 1px;
+  }
+  .add:disabled { opacity: .35; }
+  .undo {
+    margin-top: 6px; width: 100%; height: 48px; border: 0; background: transparent;
+    color: var(--muted); font-size: 17px;
+  }
+  .undo:disabled { visibility: hidden; }
+  .sign {
+    text-align: center; font-size: 24px; opacity: .75;
+    font-family: "Savoye LET", "Snell Roundhand", cursive;
+  }
+  @media (max-height: 700px) {
+    .big { font-size: clamp(48px, 17vw, 80px); margin: 2px 0 6px; }
+    .proj { font-size: 15px; }
+    .entry { font-size: 32px; min-height: 54px; padding: 6px 16px; margin: 6px 0 8px; }
+    .pad { gap: 6px; }
+    .pad button { height: 52px; font-size: 26px; }
+    .add { height: 60px; margin-top: 8px; }
+    .undo { height: 40px; margin-top: 2px; }
+    .sign { font-size: 21px; }
+  }
+  .toast {
+    position: fixed; left: 50%; top: calc(env(safe-area-inset-top) + 16px);
+    transform: translateX(-50%); background: var(--text); color: var(--bg);
+    padding: 10px 18px; border-radius: 20px; font-size: 16px;
+    opacity: 0; transition: opacity .2s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+
+  /* Ayarlar */
+  .sheet {
+    position: fixed; inset: 0; background: #f6f7f5; color: #151816; display: none; flex-direction: column;
+    padding: calc(env(safe-area-inset-top) + 16px) 16px calc(env(safe-area-inset-bottom) + 16px);
+    overflow-y: auto; -webkit-user-select: text; user-select: text;
+  }
+  @media (prefers-color-scheme: dark) { .sheet { background: #111412; color: #f1f3f1; } }
+  .sheet.open { display: flex; }
+  .sheet-inner { max-width: 480px; width: 100%; margin: 0 auto; }
+  .sheet h2 { font-size: 28px; margin: 8px 0 8px; }
+  .sheet .intro { font-size: 16px; color: #5f6762; margin: 0 0 20px; }
+  .field { margin-bottom: 20px; }
+  .field label { display: block; font-size: 17px; color: #5f6762; margin-bottom: 8px; }
+  .field input {
+    width: 100%; font-size: 26px; padding: 12px 16px; border-radius: 14px;
+    border: 2px solid #d3d8d4; background: #ffffff; color: #151816;
+  }
+  @media (prefers-color-scheme: dark) {
+    .sheet .intro, .field label, .hint { color: #9aa39d; }
+    .field input { background: #1b1f1c; color: #f1f3f1; border-color: #343a35; }
+  }
+  .field input:focus { outline: none; border-color: #1f8a5b; }
+  .hint { font-size: 15px; color: #5f6762; margin-top: 6px; }
+  .err { color: #c0392b; font-size: 16px; min-height: 22px; margin-bottom: 8px; }
+  .sheet .add { background: #1f8a5b; color: #fff; }
+  .secondary {
+    width: 100%; height: 56px; border: 0; border-radius: 16px; margin-top: 10px;
+    background: #e8ebe8; color: #151816; font-size: 20px; font-weight: 600;
+  }
+  @media (prefers-color-scheme: dark) { .secondary { background: #252a26; color: #f1f3f1; } }
+  #summary h3 { font-size: 22px; margin: 36px 0 12px; }
+  .card { background: #ffffff; border-radius: 16px; padding: 14px 16px; margin-bottom: 10px; }
+  .card .when { font-size: 16px; color: #5f6762; margin-bottom: 6px; }
+  .card .row { display: flex; justify-content: space-between; font-size: 18px; padding: 2px 0;
+               font-variant-numeric: tabular-nums; }
+  .card .res { font-weight: 700; margin-top: 6px; }
+  .card .res.good { color: #1f8a5b; }
+  .card .res.bad { color: #c0392b; }
+  @media (prefers-color-scheme: dark) {
+    .card { background: #1b1f1c; }
+    .card .when { color: #9aa39d; }
+    .card .res.good { color: #2fae76; }
+    .card .res.bad { color: #ff6b5b; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top"><button class="icon-btn" id="openSettings" aria-label="Ayarlar">⚙︎</button></div>
+
+  <div class="hero">
+    <div class="label" id="label">Bugün harcayabileceğin</div>
+    <div class="big" id="big">–</div>
+    <div class="proj" id="proj"></div>
+  </div>
+
+  <div class="entry empty" id="entry">Tutar</div>
+  <div class="pad" id="pad">
+    <button>1</button><button>2</button><button>3</button>
+    <button>4</button><button>5</button><button>6</button>
+    <button>7</button><button>8</button><button>9</button>
+    <button>,</button><button>0</button><button aria-label="Sil">⌫</button>
+  </div>
+  <button class="add" id="add" disabled>EKLE</button>
+  <button class="undo" id="undo" disabled></button>
+  <div class="sign">Flagellumdei, MD</div>
+</div>
+
+<div class="sheet" id="sheet">
+  <div class="sheet-inner">
+    <h2>Ayarlar</h2>
+    <p class="intro" id="intro">Bu bilgiler yalnızca bu telefonda saklanır.</p>
+    <div class="field">
+      <label for="budget">Aylık bütçe (TL)</label>
+      <input id="budget" type="text" inputmode="numeric">
+    </div>
+    <div class="field">
+      <label for="startDay">Dönem başlangıç günü</label>
+      <input id="startDay" type="text" inputmode="numeric">
+      <div class="hint">Ekstre kesiminin ertesi günü. Dönem bu günde başlar, sonraki ayın bir önceki gününde biter.</div>
+    </div>
+    <div class="field">
+      <label for="dueDay">Son ödeme günü</label>
+      <input id="dueDay" type="text" inputmode="numeric">
+    </div>
+    <div class="field">
+      <label for="periodBudget">Sadece bu dönemin bütçesi (TL)</label>
+      <input id="periodBudget" type="text" inputmode="numeric" placeholder="Boş = aylık bütçe">
+      <div class="hint" id="periodHint"></div>
+    </div>
+    <div class="err" id="err"></div>
+    <button class="add" id="save">KAYDET</button>
+    <button class="secondary" id="cancel">Vazgeç</button>
+    <div id="summary"></div>
+    <div class="sign" style="margin-top:28px">Flagellumdei, MD</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  var KEY = 'harcama-sayaci-v1';
+  var DAY = 86400000;
+
+  // ---- Tarih yardımcıları (yerel saat, gece yarısına göre) ----
+  function midnight(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function daysInMonth(y, m) { return new Date(y, m + 1, 0).getDate(); }
+  function dayIn(y, m, day) { return new Date(y, m, Math.min(day, daysInMonth(y, m))); }
+  function dayDiff(a, b) { return Math.round((b - a) / DAY); }
+
+  function period(today, startDay) {
+    var start = dayIn(today.getFullYear(), today.getMonth(), startDay);
+    if (today < start) start = dayIn(today.getFullYear(), today.getMonth() - 1, startDay);
+    var next = dayIn(start.getFullYear(), start.getMonth() + 1, startDay);
+    return { start: start, next: next }; // next = sonraki dönemin ilk günü
+  }
+
+  // ---- Veri (yalnızca bu telefonda, localStorage) ----
+  // Kodda hiçbir kişisel tutar yok; hepsi ilk açılışta telefonda girilir.
+  function load() {
+    var d = null;
+    try { d = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+    if (!d || !Array.isArray(d.expenses)) d = { expenses: [] };
+    d.expenses = d.expenses.filter(function (e) { return !e.o; }); // eski sürümden kalan kayıtlar
+    if (!d.periodBudgets) d.periodBudgets = {};
+    if (!d.since) d.since = midnight(new Date()).getTime();       // takibe başlanan gün
+    return d;
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+  }
+  var state = load();
+  function configured() { return state.budget > 0 && state.startDay >= 1 && state.dueDay >= 1; }
+
+  // ---- Hesap ----
+  function spentBetween(from, to) {
+    var s = 0;
+    state.expenses.forEach(function (e) { if (e.t >= from && e.t < to) s += e.a; });
+    return s;
+  }
+
+  // Dönemin bütçesi: aylık (ya da o döneme özel) bütçe − önceki dönemin aşımı.
+  // Önceki dönemde artan para devretmez (borca gider), sadece bilgi olarak gösterilir.
+  // Takibe başlanan dönemden bugünkü döneme kadar her dönem (en eskisi başta)
+  function history() {
+    var today = midnight(new Date());
+    var p = period(midnight(new Date(Math.min(state.since, today.getTime()))), state.startDay);
+    var list = [], over = 0;
+    for (var i = 0; i < 240 && p.start <= today; i++) {
+      var base = state.periodBudgets[p.start.getTime()] > 0 ? state.periodBudgets[p.start.getTime()] : state.budget;
+      var budget = base - over;
+      var from = Math.max(p.start.getTime(), state.since);
+      var spent = spentBetween(from, p.next.getTime());
+      list.push({ start: p.start, from: new Date(from), end: new Date(p.next.getTime() - DAY),
+                  budget: budget, carried: over, spent: spent, current: p.next > today });
+      over = Math.max(0, spent - budget);
+      p = period(p.next, state.startDay);
+    }
+    return list;
+  }
+
+  function periodBudget(target) {
+    var h = history();
+    var cur = h[h.length - 1];
+    var prev = h[h.length - 2];
+    if (!cur || cur.start.getTime() !== target.getTime()) return { budget: state.budget, over: 0, saved: 0 };
+    return { budget: cur.budget, over: cur.carried, saved: prev ? Math.max(0, prev.budget - prev.spent) : 0 };
+  }
+
+  function compute() {
+    var today = midnight(new Date());
+    var p = period(today, state.startDay);
+    // Dönemin ortasında başlandıysa hesap takip başlangıcından itibaren yapılır
+    var start = new Date(Math.min(today.getTime(), Math.max(p.start.getTime(), state.since)));
+    var tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+    var custom = state.periodBudgets[p.start.getTime()];
+    var pb = periodBudget(p.start);
+    var budget = pb.budget;
+
+    var spentBefore = 0, spentToday = 0;
+    state.expenses.forEach(function (e) {
+      if (e.t >= start.getTime() && e.t < today.getTime()) spentBefore += e.a;
+      else if (e.t >= today.getTime() && e.t < tomorrow.getTime()) spentToday += e.a;
+    });
+
+    var totalDays = dayDiff(start, p.next);
+    var daysLeft = dayDiff(today, p.next);           // bugün dahil
+    var elapsed = dayDiff(start, today) + 1;         // bugün dahil
+    var spent = spentBefore + spentToday;
+
+    // Ekstre dönem sonunda kesilir, ödeme sonraki ilk "son ödeme günü"nde
+    var end = new Date(p.next.getTime() - DAY);
+    var due = dayIn(end.getFullYear(), end.getMonth(), state.dueDay);
+    if (due <= end) due = dayIn(end.getFullYear(), end.getMonth() + 1, state.dueDay);
+
+    return {
+      todayLeft: (budget - spentBefore) / daysLeft - spentToday,
+      projection: spent / elapsed * totalDays,
+      daysLeft: daysLeft,
+      end: end,
+      due: due,
+      periodStart: p.start,
+      custom: custom,
+      over: pb.over,
+      saved: pb.saved
+    };
+  }
+
+  // ---- Ekran ----
+  var $ = function (id) { return document.getElementById(id); };
+  function tl(n) { return Math.round(n).toLocaleString('tr-TR') + ' ₺'; }
+  function tlExact(n) { return n.toLocaleString('tr-TR', { maximumFractionDigits: 2 }) + ' ₺'; }
+  function dateTxt(d) { return d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' }); }
+  // "1 Ekim'de", "1 Kasım'da", "1 Aralık'ta" — ek ay adına göre değişir
+  var LOC = ['ta', 'ta', 'ta', 'da', 'ta', 'da', 'da', 'ta', 'de', 'de', 'da', 'ta'];
+  function dateLoc(d) { return dateTxt(d) + '’' + LOC[d.getMonth()]; }
+
+  var typed = '';
+
+  function render() {
+    if (!configured()) return;
+    var c = compute();
+    var v = Math.round(c.todayLeft);
+    $('big').innerHTML = (v < 0 ? '−' : '') + Math.abs(v).toLocaleString('tr-TR') + '<small>₺</small>';
+    document.body.classList.toggle('over', v < 0);
+    $('label').textContent = v < 0 ? 'Bugünkü payını aştın' : 'Bugün harcayabileceğin';
+
+    $('proj').innerHTML = 'Bu gidişle ' + dateLoc(c.due) + ' ödeyeceğin ekstre <b>' + tl(c.projection) + '</b>.<br>' +
+      '<span style="font-size:15px">Dönem sonu ' + dateTxt(c.end) + ' · ' + c.daysLeft + ' gün kaldı</span>' +
+      (c.over > 0 ? '<br><span style="font-size:15px">Geçen dönemden ' + tl(c.over) + ' aşım düşüldü.</span>'
+        : c.saved > 0 ? '<br><span style="font-size:15px">Geçen dönem ' + tl(c.saved) + ' tasarruf ettin.</span>' : '');
+
+    $('entry').textContent = typed ? typed + ' ₺' : 'Tutar';
+    $('entry').classList.toggle('empty', !typed);
+    $('add').disabled = !(parseAmount(typed) > 0);
+
+    var last = state.expenses[state.expenses.length - 1];
+    $('undo').disabled = !last;
+    $('undo').textContent = last ? '↶ Son harcamayı geri al (' + tlExact(last.a) + ')' : '';
+  }
+
+  function parseAmount(s) {
+    var n = parseFloat(String(s).replace(/\./g, '').replace(',', '.'));
+    return isFinite(n) ? Math.round(n * 100) / 100 : 0;
+  }
+
+  var toastTimer;
+  function toast(msg) {
+    $('toast').textContent = msg;
+    $('toast').classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { $('toast').classList.remove('show'); }, 1600);
+  }
+
+  // ---- Tuş takımı ----
+  $('pad').addEventListener('click', function (ev) {
+    var b = ev.target.closest('button');
+    if (!b) return;
+    var k = b.textContent;
+    if (k === '⌫') typed = typed.slice(0, -1);
+    else if (k === ',') { if (typed.indexOf(',') === -1) typed = (typed || '0') + ','; }
+    else {
+      var parts = typed.split(',');
+      if (parts[1] !== undefined && parts[1].length >= 2) return;   // en fazla 2 kuruş hanesi
+      if (parts[1] === undefined && parts[0].length >= 7) return;   // makul üst sınır
+      typed = (typed === '0') ? k : typed + k;
+    }
+    render();
+  });
+
+  $('add').addEventListener('click', function () {
+    var a = parseAmount(typed);
+    if (!(a > 0)) return;
+    state.expenses.push({ t: Date.now(), a: a });
+    save();
+    typed = '';
+    render();
+    toast(tlExact(a) + ' eklendi');
+  });
+
+  $('undo').addEventListener('click', function () {
+    var last = state.expenses[state.expenses.length - 1];
+    if (!last) return;
+    if (!confirm(tlExact(last.a) + ' tutarındaki son harcama silinsin mi?')) return;
+    state.expenses.pop();
+    save();
+    render();
+    toast('Geri alındı');
+  });
+
+  // ---- Dönem özetleri (ayarlar ekranının altında, en yenisi üstte) ----
+  function renderSummary() {
+    var box = $('summary');
+    if (!configured()) { box.innerHTML = ''; return; }
+    var cards = history().reverse().map(function (h) {
+      var row = function (k, v) { return '<div class="row"><span>' + k + '</span><span>' + v + '</span></div>'; };
+      var diff = h.budget - h.spent;
+      var res;
+      if (h.current) {
+        res = diff >= 0 ? '<div class="res good">Şimdilik ' + tl(diff) + ' kaldı</div>'
+                        : '<div class="res bad">Şimdilik ' + tl(-diff) + ' aşıldı</div>';
+      } else {
+        res = diff >= 0 ? '<div class="res good">' + tl(diff) + ' tasarruf</div>'
+                        : '<div class="res bad">' + tl(-diff) + ' aşım · sonraki dönemden düşüldü</div>';
+      }
+      return '<div class="card">' +
+        '<div class="when">' + dateTxt(h.from) + ' – ' + dateTxt(h.end) + (h.current ? ' · devam ediyor' : '') + '</div>' +
+        row('Bütçe', tl(h.budget) + (h.carried > 0 ? ' <small>(' + tl(h.carried) + ' aşım düşüldü)</small>' : '')) +
+        row('Harcanan', tl(h.spent)) +
+        res + '</div>';
+    });
+    box.innerHTML = '<h3>Dönem özetleri</h3>' + cards.join('');
+  }
+
+  // ---- Ayarlar ----
+  function openSettings() {
+    renderSummary();
+    var first = !configured();
+    $('intro').textContent = first
+      ? 'Başlamak için bilgilerini gir. Bunlar yalnızca bu telefonda saklanır.'
+      : 'Bu bilgiler yalnızca bu telefonda saklanır.';
+    $('cancel').style.display = first ? 'none' : '';
+    $('budget').value = state.budget ? String(state.budget) : '';
+    $('startDay').value = state.startDay ? String(state.startDay) : '';
+    $('dueDay').value = state.dueDay ? String(state.dueDay) : '';
+    $('periodBudget').value = '';
+    $('periodHint').textContent = 'Örneğin dönemin ortasında başladıysan. Sonraki dönemde aylık bütçeye döner.';
+    if (state.startDay) {
+      var c = period(midnight(new Date()), state.startDay);
+      var custom = state.periodBudgets[c.start.getTime()];
+      if (custom) $('periodBudget').value = String(custom);
+      var s = new Date(Math.max(c.start.getTime(), state.since));
+      $('periodHint').textContent = 'Bu dönem: ' + dateTxt(s) + ' – ' + dateTxt(new Date(c.next.getTime() - DAY)) +
+        '. Sonraki dönemde aylık bütçeye döner.';
+    }
+    $('err').textContent = '';
+    $('sheet').classList.add('open');
+  }
+
+  $('openSettings').addEventListener('click', openSettings);
+  $('cancel').addEventListener('click', function () { $('sheet').classList.remove('open'); });
+  $('save').addEventListener('click', function () {
+    var b = parseAmount($('budget').value);
+    var sd = parseInt($('startDay').value, 10);
+    var dd = parseInt($('dueDay').value, 10);
+    var pbRaw = $('periodBudget').value.trim();
+    var pb = pbRaw ? parseAmount(pbRaw) : 0;
+    if (!(b > 0)) { $('err').textContent = 'Aylık bütçe 0’dan büyük olmalı.'; return; }
+    if (!(sd >= 1 && sd <= 31)) { $('err').textContent = 'Başlangıç günü 1 ile 31 arasında olmalı.'; return; }
+    if (!(dd >= 1 && dd <= 31)) { $('err').textContent = 'Son ödeme günü 1 ile 31 arasında olmalı.'; return; }
+    if (pbRaw && !(pb > 0)) { $('err').textContent = 'Dönem bütçesi 0’dan büyük olmalı ya da boş kalmalı.'; return; }
+
+    state.budget = b;
+    state.startDay = sd;
+    state.dueDay = dd;
+    var ps = period(midnight(new Date()), sd).start.getTime();
+    if (pb > 0) state.periodBudgets[ps] = pb; else delete state.periodBudgets[ps];
+    save();
+    $('sheet').classList.remove('open');
+    render();
+    toast('Kaydedildi');
+  });
+
+  // Gece yarısı geçince ve uygulamaya geri dönünce yeniden hesapla
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) render(); });
+  setInterval(render, 60000);
+
+  save();
+  if (configured()) render(); else openSettings();
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(function () {});
+  }
+})();
+</script>
+</body>
+</html>
