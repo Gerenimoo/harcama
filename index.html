@@ -252,7 +252,7 @@
   // Yeni, sade sürüm: eski kayıtlara dokunmaz, kendi kayıt alanını kullanır
   var KEY = 'harcama-sade-v1';
   var DAY = 86400000;
-  var CATS = [['market', 'Market'], ['yemek', 'Yemek'], ['yakit', 'Yakıt'], ['fatura', 'Fatura'], ['diger', 'Diğer']];
+  var CATS = [['market', 'Market'], ['yemek', 'Yemek'], ['yakit', 'Yakıt'], ['kahve', 'Kahve'], ['diger', 'Diğer']];
   var CAT_NAME = {};
   CATS.forEach(function (c) { CAT_NAME[c[0]] = c[1]; });
 
@@ -269,6 +269,8 @@
     var d = null;
     try { d = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
     if (!d || !Array.isArray(d.expenses)) d = { expenses: [] };
+    // Artık olmayan bir kategoriye (ör. eski 'Fatura') girilmiş harcamalar 'Diğer' olur
+    d.expenses.forEach(function (e) { if (!CAT_NAME[e.c]) e.c = 'diger'; });
     if (!Array.isArray(d.budgets)) d.budgets = [];       // [{from, amount}] aylık bütçe geçmişi
     if (!Array.isArray(d.startDays)) d.startDays = [];   // [{from, day}] başlangıç günü geçmişi
     return d;
