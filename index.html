@@ -65,6 +65,9 @@
     font-variant-numeric: tabular-nums; margin: 2px 0 10px; white-space: nowrap;
   }
   .big small { font-size: .5em; font-weight: 700; margin-left: 4px; }
+  /* Büyük rakamın rengi durumu gösterir: yeşil yolunda, sarı %80 geçildi, kırmızı aşım */
+  .big { color: var(--accent); transition: color .3s; }
+  .big.warn { color: var(--warn); }
   .big.neg { color: var(--danger); }
   .bar { height: 10px; background: var(--track); border-radius: 5px; overflow: hidden; margin: 4px 0; }
   .bar i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 5px; transition: width .3s; }
@@ -385,10 +388,11 @@
 
     $('periodTitle').textContent = dateShort(cur.from) + ' – ' + dateShort(cur.end);
     $('big').innerHTML = (v < 0 ? '−' : '') + Math.abs(v).toLocaleString('tr-TR') + '<small>₺</small>';
-    $('big').classList.toggle('neg', v < 0);
     $('label').textContent = v < 0 ? 'Bugünkü payını aştın' : 'Bugün harcayabileceğin';
 
     var pct = cur.budget > 0 ? cur.spent / cur.budget : (cur.spent > 0 ? 9 : 0);
+    $('big').classList.toggle('neg', v < 0 || pct >= 1);
+    $('big').classList.toggle('warn', v >= 0 && pct >= 0.8 && pct < 1);
     $('bar').firstElementChild.style.width = Math.min(100, pct * 100) + '%';
     $('bar').classList.toggle('warn', pct >= 0.8 && pct < 1);
     $('bar').classList.toggle('bad', pct >= 1);
