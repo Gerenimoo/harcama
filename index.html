@@ -239,6 +239,8 @@
     <div class="err" id="err"></div>
     <button class="btn" id="save">KAYDET</button>
     <button class="btn sec" id="cancel">Vazgeç</button>
+    <button class="btn link" id="reset" style="margin-top:28px">Baştan başla</button>
+    <div class="hint" id="resetHint" style="text-align:center">Bütün harcamaları ve ayarları siler. Takip, bilgileri yeniden girdiğin günden başlar.</div>
     <div class="sign" style="margin-top:24px">Flagellumdei, MD</div>
   </div>
 </div>
@@ -521,6 +523,7 @@
       ? 'Başlamak için iki bilgiyi gir. Bunlar yalnızca bu telefonda saklanır.'
       : 'Bu bilgiler yalnızca bu telefonda saklanır.';
     $('cancel').style.display = first ? 'none' : '';
+    $('reset').hidden = $('resetHint').hidden = first;
     $('budget').value = first ? '' : String(lastBudget().amount);
     $('startDay').value = first ? '' : String(lastStartDay().day);
     $('budgetHint').textContent = first
@@ -537,6 +540,14 @@
   }
   $('openSettings').addEventListener('click', openSettings);
   $('cancel').addEventListener('click', function () { $('sheet').classList.remove('open'); });
+  $('reset').addEventListener('click', function () {
+    if (!confirm('Bütün harcamalar ve ayarlar silinsin mi? Bu geri alınamaz.')) return;
+    state = { expenses: [], budgets: [], startDays: [] };
+    save();
+    typed = '';
+    openSettings();
+    toast('Sıfırlandı');
+  });
   $('save').addEventListener('click', function () {
     var b = parseAmount($('budget').value);
     var sd = parseInt($('startDay').value, 10);

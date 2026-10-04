@@ -1,6 +1,6 @@
 // Uygulama dosyalarını telefona kaydeder, internet olmadan da açılsın diye.
 // Harcama verilerine dokunmaz; onlar yalnızca telefonun hafızasında durur.
-var CACHE = 'harcama-v11';
+var CACHE = 'harcama-v12';
 var FILES = ['./', 'index.html', 'manifest.json', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', function (e) {
