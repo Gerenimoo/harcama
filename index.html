@@ -18,8 +18,9 @@
     --surface: #ffffff;
     --text: #151816;
     --muted: #5f6762;
-    --accent: #1f8a5b;
+    --accent: #2c4a8a;
     --accent-text: #ffffff;
+    --ok: #1f8a5b;
     --danger: #c0392b;
     --warn: #b7791f;
     --key: #e8ebe8;
@@ -32,8 +33,9 @@
       --surface: #1b1f1c;
       --text: #f1f3f1;
       --muted: #9aa39d;
-      --accent: #2fae76;
-      --accent-text: #08130d;
+      --accent: #8ea8f0;
+      --accent-text: #0c1426;
+      --ok: #2fae76;
       --danger: #ff6b5b;
       --warn: #f2c14e;
       --key: #252a26;
@@ -65,12 +67,11 @@
     font-variant-numeric: tabular-nums; margin: 2px 0 10px; white-space: nowrap;
   }
   .big small { font-size: .5em; font-weight: 700; margin-left: 4px; }
-  /* Büyük rakamın rengi durumu gösterir: yeşil yolunda, sarı %80 geçildi, kırmızı aşım */
-  .big { color: var(--accent); transition: color .3s; }
-  .big.warn { color: var(--warn); }
+  /* Büyük rakam bugünü gösterir: yeşil payın içinde, kırmızı bugünkü pay aşıldı */
+  .big { color: var(--ok); transition: color .3s; }
   .big.neg { color: var(--danger); }
   .bar { height: 10px; background: var(--track); border-radius: 5px; overflow: hidden; margin: 4px 0; }
-  .bar i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 5px; transition: width .3s; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--ok); border-radius: 5px; transition: width .3s; }
   .bar.warn i { background: var(--warn); }
   .bar.bad i { background: var(--danger); }
   .barlbl { display: flex; justify-content: space-between; font-size: 15px; color: var(--muted); font-variant-numeric: tabular-nums; }
@@ -132,7 +133,7 @@
   .card h4 { margin: 0 0 6px; font-size: 15px; color: var(--muted); font-weight: 600; }
   .row { display: flex; justify-content: space-between; gap: 10px; font-size: 17px; padding: 3px 0; font-variant-numeric: tabular-nums; }
   .res { font-weight: 700; margin-top: 6px; }
-  .good { color: var(--accent); }
+  .good { color: var(--ok); }
   .badc { color: var(--danger); }
   .item {
     display: flex; align-items: center; gap: 10px; width: 100%; border: 0; text-align: left; color: var(--text);
@@ -391,8 +392,7 @@
     $('label').textContent = v < 0 ? 'Bugünkü payını aştın' : 'Bugün harcayabileceğin';
 
     var pct = cur.budget > 0 ? cur.spent / cur.budget : (cur.spent > 0 ? 9 : 0);
-    $('big').classList.toggle('neg', v < 0 || pct >= 1);
-    $('big').classList.toggle('warn', v >= 0 && pct >= 0.8 && pct < 1);
+    $('big').classList.toggle('neg', v < 0);                         // rakam bugüne, çubuk döneme göre renk alır
     $('bar').firstElementChild.style.width = Math.min(100, pct * 100) + '%';
     $('bar').classList.toggle('warn', pct >= 0.8 && pct < 1);
     $('bar').classList.toggle('bad', pct >= 1);
