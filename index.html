@@ -139,6 +139,10 @@
   .item .sub { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .item .amt { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .muted { color: var(--muted); font-size: 15px; text-align: center; padding: 12px 0; }
+  .cats-box { margin-top: 8px; border-top: 1px solid var(--track); padding-top: 8px; }
+  .catrow { display: grid; grid-template-columns: 64px 1fr 124px; align-items: center; gap: 10px; font-size: 15px; padding: 3px 0; }
+  .catrow .bar { margin: 0; height: 8px; }
+  .catrow span:last-child { font-variant-numeric: tabular-nums; text-align: right; min-width: 72px; }
 
   .toast {
     position: fixed; left: 50%; top: calc(env(safe-area-inset-top) + 12px); transform: translateX(-50%);
@@ -325,10 +329,12 @@
       var from = Math.max(p.start.getTime(), state.since), to = p.next.getTime();
       var base = budgetAt(p.start.getTime());
       if (from > p.start.getTime()) base = Math.round(base * dayDiff(new Date(from), p.next) / dayDiff(p.start, p.next));
-      var spent = 0;
-      state.expenses.forEach(function (e) { if (e.t >= from && e.t < to) spent += e.a; });
+      var spent = 0, cats = {};
+      state.expenses.forEach(function (e) {
+        if (e.t >= from && e.t < to) { spent += e.a; cats[e.c] = (cats[e.c] || 0) + e.a; }
+      });
       var h = { start: p.start, from: new Date(from), next: p.next, end: new Date(to - DAY),
-                budget: base - over, carried: over, spent: spent, current: p.next > t };
+                budget: base - over, carried: over, spent: spent, cats: cats, current: p.next > t };
       over = Math.max(0, spent - h.budget);
       return h;
     });
@@ -344,6 +350,7 @@
   // "1 Ekim'de", "1 Kasım'da" — ek ay adına göre değişir
   var LOC = ['ta', 'ta', 'ta', 'da', 'ta', 'da', 'da', 'ta', 'de', 'de', 'da', 'ta'];
   function dateLoc(d) { return dateTxt(d) + '’' + LOC[d.getMonth()]; }
+  function dateAbl(d) { return dateTxt(d) + '’' + LOC[d.getMonth()] + 'n'; }   // "1 Ekim'den", "1 Kasım'dan"
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function parseAmount(s) {
     var n = parseFloat(String(s).replace(/\./g, '').replace(',', '.'));
@@ -436,12 +443,38 @@
   });
 
   // ---- Geçmiş ----
+  // Kategori dağılımı: en çok harcanan üstte, harcama olmayan kategoriler gösterilmez
+  function catRows(cats, total) {
+    var rows = CATS.filter(function (c) { return cats[c[0]] > 0; })
+      .sort(function (a, b) { return cats[b[0]] - cats[a[0]]; })
+      .map(function (c) {
+        var v = cats[c[0]];
+        return '<div class="catrow"><span>' + c[1] + '</span><div class="bar"><i style="width:' + (v / total * 100) +
+          '%"></i></div><span>' + tl(v) + ' · %' + Math.round(v / total * 100) + '</span></div>';
+      });
+    return rows.length ? '<div class="cats-box">' + rows.join('') + '</div>' : '';
+  }
+
   function renderHistory() {
     var h = history(), cur = h[h.length - 1];
     var from = cur.from.getTime(), to = cur.next.getTime();
     var list = state.expenses.filter(function (e) { return e.t >= from && e.t < to; })
       .sort(function (a, b) { return b.t - a.t; });
-    var html = '<h3>Bu dönem · ' + dateTxt(cur.from) + ' – ' + dateTxt(cur.end) + '</h3>';
+    var html = '';
+    if (h.length > 1) {
+      var all = {}, allSpent = 0;
+      h.forEach(function (x) {
+        allSpent += x.spent;
+        Object.keys(x.cats).forEach(function (k) { all[k] = (all[k] || 0) + x.cats[k]; });
+      });
+      html += '<h3>Tüm dönemler</h3><div class="card"><h4>' + dateAbl(h[0].from) + ' bugüne</h4>' +
+        '<div class="row"><span>Toplam harcanan</span><b>' + tl(allSpent) + '</b></div>' + catRows(all, allSpent) + '</div>';
+    }
+    html += '<h3>Bu dönem · ' + dateTxt(cur.from) + ' – ' + dateTxt(cur.end) + '</h3>';
+    if (cur.spent > 0) {
+      html += '<div class="card"><div class="row"><span>Harcanan</span><b>' + tl(cur.spent) + ' / ' + tl(cur.budget) + '</b></div>' +
+        catRows(cur.cats, cur.spent) + '</div>';
+    }
     html += list.length ? list.map(function (e) {
       var d = new Date(e.t);
       return '<button class="item" data-id="' + e.id + '"><div class="meta"><div>' + CAT_NAME[e.c] + '</div>' +
@@ -458,7 +491,8 @@
           '<div class="row"><span>Bütçe</span><span>' + tl(x.budget) + '</span></div>' +
           '<div class="row"><span>Harcanan</span><span>' + tl(x.spent) + '</span></div>' +
           (diff >= 0 ? '<div class="res good">' + tl(diff) + ' biriktirilebilir</div>'
-                     : '<div class="res badc">' + tl(-diff) + ' aşım · sonraki dönemden düşüldü</div>') + '</div>';
+                     : '<div class="res badc">' + tl(-diff) + ' aşım · sonraki dönemden düşüldü</div>') +
+          catRows(x.cats, x.spent) + '</div>';
       }).join('');
     }
     $('historyBody').innerHTML = html;
