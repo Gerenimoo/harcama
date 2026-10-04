@@ -1,5 +1,6 @@
 // Uygulama dosyalarını telefona kaydeder, internet olmadan da açılsın diye.
 // Harcama verilerine dokunmaz; onlar yalnızca telefonun hafızasında durur.
+// Sürüm notu: büyük rakam durum rengini gösterir.
 var CACHE = 'harcama-v15';
 var FILES = ['./', 'index.html', 'manifest.json', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png'];
 
