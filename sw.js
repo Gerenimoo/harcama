@@ -1,7 +1,7 @@
 // Uygulama dosyalarını telefona kaydeder, internet olmadan da açılsın diye.
 // Harcama verilerine dokunmaz; onlar yalnızca telefonun hafızasında durur.
-// Sürüm notu: grafit gri tema; rakam bugüne, çubuk döneme göre renk alır.
-var CACHE = 'harcama-v18';
+// Sürüm notu: Baştan başla en altta, SIFIRLA yazınca çalışır.
+var CACHE = 'harcama-v19';
 var FILES = ['./', 'index.html', 'manifest.json', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', function (e) {

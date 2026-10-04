@@ -126,6 +126,7 @@
   .btn { width: 100%; border: 0; border-radius: 14px; background: var(--accent); color: var(--accent-text); font-size: 20px; font-weight: 800; height: 58px; margin-top: 10px; }
   .btn.sec { background: var(--key); color: var(--text); font-weight: 600; }
   .btn.link { background: transparent; color: var(--danger); font-weight: 600; }
+  .reset-link { border: 0; background: transparent; color: var(--danger); font-size: 14px; text-decoration: underline; padding: 8px; }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; }
   .chips button { border: 2px solid var(--key); background: var(--surface); color: var(--text); border-radius: 20px; padding: 8px 14px; font-size: 16px; }
   .chips button.on { border-color: var(--accent); color: var(--accent); font-weight: 700; }
@@ -247,9 +248,12 @@
     <div class="err" id="err"></div>
     <button class="btn" id="save">KAYDET</button>
     <button class="btn sec" id="cancel">Vazgeç</button>
-    <button class="btn link" id="reset" style="margin-top:28px">Baştan başla</button>
-    <div class="hint" id="resetHint" style="text-align:center">Bütün harcamaları ve ayarları siler. Takip, bilgileri yeniden girdiğin günden başlar.</div>
     <div class="sign" style="margin-top:24px">Flagellumdei, MD</div>
+    <!-- Yanlışlıkla basılmasın diye en altta, küçük ve soluk; onay için SIFIRLA yazılır -->
+    <div style="margin-top:120px; text-align:center; opacity:.6">
+      <button class="reset-link" id="reset">Baştan başla</button>
+      <div class="hint" id="resetHint">Bütün harcamaları ve ayarları siler.</div>
+    </div>
   </div>
 </div>
 
@@ -581,7 +585,9 @@
   $('openSettings').addEventListener('click', openSettings);
   $('cancel').addEventListener('click', function () { $('sheet').classList.remove('open'); });
   $('reset').addEventListener('click', function () {
-    if (!confirm('Bütün harcamalar ve ayarlar silinsin mi? Bu geri alınamaz.')) return;
+    var answer = prompt('Bütün harcamalar ve ayarlar silinecek, bu geri alınamaz.\nOnaylamak için SIFIRLA yaz:');
+    if (answer === null) return;
+    if (answer.trim().toLocaleUpperCase('tr-TR').replace(/İ/g, 'I') !== 'SIFIRLA') { toast('Silinmedi'); return; }
     state = { expenses: [], budgets: [], startDays: [] };
     save();
     typed = '';
