@@ -50,110 +50,55 @@
     -webkit-user-select: none; user-select: none; overscroll-behavior: none;
   }
   .app {
-    height: 100%; display: flex; flex-direction: column;
-    max-width: 480px; margin: 0 auto; padding-top: env(safe-area-inset-top);
+    height: 100%; display: flex; flex-direction: column; max-width: 480px; margin: 0 auto;
+    padding: env(safe-area-inset-top) 16px calc(env(safe-area-inset-bottom) + 10px);
   }
-  .view { flex: 1; min-height: 0; display: none; flex-direction: column; padding: 0 16px 8px; }
-  .view.on { display: flex; }
-  .view.scroll { overflow-y: auto; -webkit-overflow-scrolling: touch; display: none; }
-  .view.scroll.on { display: block; }
-  .top { display: flex; justify-content: space-between; align-items: center; min-height: 44px; }
-  .top .title { font-size: 15px; color: var(--muted); }
-  .top h2 { font-size: 24px; margin: 8px 0; }
-  .icon-btn {
-    border: 0; background: transparent; color: var(--muted);
-    font-size: 26px; width: 44px; height: 44px; border-radius: 22px;
-  }
+  .top { display: flex; align-items: center; min-height: 44px; gap: 4px; }
+  .top .title { flex: 1; font-size: 15px; color: var(--muted); }
+  .pill { border: 0; background: var(--key); color: var(--text); border-radius: 18px; font-size: 15px; font-weight: 600; padding: 8px 14px; }
+  .icon-btn { border: 0; background: transparent; color: var(--muted); font-size: 26px; width: 44px; height: 44px; border-radius: 22px; }
 
-  /* Bugün */
   .hero { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; text-align: center; }
-  .label { font-size: 16px; color: var(--muted); }
+  .label { font-size: 17px; color: var(--muted); }
   .big {
-    font-size: clamp(52px, 18vw, 92px); font-weight: 800; line-height: 1.05;
-    letter-spacing: -2px; font-variant-numeric: tabular-nums; margin: 2px 0 6px; white-space: nowrap;
+    font-size: clamp(56px, 20vw, 100px); font-weight: 800; line-height: 1.05; letter-spacing: -2px;
+    font-variant-numeric: tabular-nums; margin: 2px 0 10px; white-space: nowrap;
   }
   .big small { font-size: .5em; font-weight: 700; margin-left: 4px; }
   .big.neg { color: var(--danger); }
-  .bar { height: 10px; background: var(--track); border-radius: 5px; overflow: hidden; margin: 6px 0 4px; }
+  .bar { height: 10px; background: var(--track); border-radius: 5px; overflow: hidden; margin: 4px 0; }
   .bar i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 5px; transition: width .3s; }
   .bar.warn i { background: var(--warn); }
   .bar.bad i { background: var(--danger); }
-  .barlbl { display: flex; justify-content: space-between; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
-  .alert { font-size: 14px; font-weight: 700; min-height: 0; margin-top: 2px; }
+  .barlbl { display: flex; justify-content: space-between; font-size: 15px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .alert { font-size: 15px; font-weight: 700; margin-top: 4px; }
   .alert.warn { color: var(--warn); }
   .alert.bad { color: var(--danger); }
   .alert.info { color: var(--muted); font-weight: 500; }
-  .line { font-size: 15px; color: var(--muted); margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .line { font-size: 16px; color: var(--muted); margin-top: 4px; font-variant-numeric: tabular-nums; }
   .line b { color: var(--text); white-space: nowrap; }
-  .line b.badc { color: var(--danger); }
-  .remind {
-    display: flex; align-items: center; justify-content: space-between; gap: 8px; text-align: left;
-    margin-top: 8px; background: var(--surface); border-radius: 12px; padding: 6px 6px 6px 12px; font-size: 14px;
-  }
-  .remind.warn { color: var(--warn); font-weight: 700; }
-  .remind.bad { color: var(--danger); font-weight: 700; }
-  .remind button { flex: none; border: 0; background: var(--key); color: var(--text); border-radius: 10px; font-size: 14px; font-weight: 700; padding: 9px 12px; }
+
   .entry {
-    background: var(--surface); border-radius: 14px; font-size: 34px; font-weight: 700; text-align: right;
-    padding: 6px 16px; min-height: 54px; margin: 8px 0; font-variant-numeric: tabular-nums;
+    background: var(--surface); border-radius: 14px; font-size: 36px; font-weight: 700; text-align: right;
+    padding: 6px 16px; min-height: 58px; margin: 10px 0 8px; font-variant-numeric: tabular-nums;
   }
   .entry.empty { color: var(--muted); font-weight: 500; }
   .pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
   .pad button {
-    border: 0; background: var(--key); color: var(--text); font-size: 26px; font-weight: 600;
-    height: clamp(42px, 6.4vh, 58px); border-radius: 12px;
+    border: 0; background: var(--key); color: var(--text); font-size: 28px; font-weight: 600;
+    height: clamp(44px, 6.8vh, 60px); border-radius: 12px;
   }
   .pad button:active { background: var(--key-active); }
   .cats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 8px; }
   .cats button {
     grid-column: span 2; border: 0; background: var(--accent); color: var(--accent-text);
-    font-size: 18px; font-weight: 800; height: clamp(44px, 6.6vh, 60px); border-radius: 14px;
+    font-size: 18px; font-weight: 800; height: clamp(46px, 7vh, 62px); border-radius: 14px;
   }
   .cats button:nth-child(n+4) { grid-column: span 3; }
   .cats.off button { opacity: .35; }
-  .sign {
-    text-align: center; font-size: 22px; opacity: .75; margin-top: 4px;
-    font-family: "Savoye LET", "Snell Roundhand", cursive;
-  }
-  .tabs { display: flex; border-top: 1px solid var(--track); padding-bottom: env(safe-area-inset-bottom); background: var(--bg); }
-  .tabs button { flex: 1; border: 0; background: transparent; color: var(--muted); font-size: 16px; font-weight: 600; padding: 12px 0 10px; }
-  .tabs button.on { color: var(--accent); }
+  .sign { text-align: center; font-size: 22px; opacity: .75; margin-top: 6px; font-family: "Savoye LET", "Snell Roundhand", cursive; }
 
-  /* Kartlar ve listeler */
-  .card { background: var(--surface); border-radius: 16px; padding: 14px 16px; margin-bottom: 10px; }
-  .card h4 { margin: 0 0 8px; font-size: 15px; color: var(--muted); font-weight: 600; }
-  .row { display: flex; justify-content: space-between; gap: 10px; font-size: 17px; padding: 3px 0; font-variant-numeric: tabular-nums; }
-  .small { font-size: 14px; color: var(--muted); }
-  .good { color: var(--accent); }
-  .badc { color: var(--danger); }
-  .res { font-weight: 700; margin-top: 6px; }
-  .item {
-    display: flex; align-items: center; gap: 10px; background: var(--surface); border-radius: 12px;
-    padding: 10px 12px; margin-bottom: 6px; font-size: 16px; width: 100%; border: 0; color: var(--text); text-align: left;
-  }
-  .item .meta { flex: 1; min-width: 0; }
-  .item .sub { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .item .amt { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .x { flex: none; border: 0; background: transparent; color: var(--muted); font-size: 22px; width: 36px; height: 36px; }
-  .catrow { display: grid; grid-template-columns: 72px 1fr auto; align-items: center; gap: 10px; font-size: 15px; padding: 3px 0; }
-  .catrow .bar { margin: 0; height: 8px; }
-  .catrow span:last-child { font-variant-numeric: tabular-nums; }
-  .empty-note { text-align: center; color: var(--muted); font-size: 15px; padding: 20px 0; }
-  .sec-title { font-size: 18px; margin: 18px 0 10px; }
-  .inline { display: flex; gap: 8px; }
-  input.f {
-    width: 100%; min-width: 0; font-size: 22px; padding: 10px 14px; border-radius: 12px;
-    border: 2px solid var(--key); background: var(--surface); color: var(--text);
-    -webkit-user-select: text; user-select: text;
-  }
-  input.f:focus { outline: none; border-color: var(--accent); }
-  .btn { border: 0; border-radius: 12px; background: var(--accent); color: var(--accent-text); font-size: 17px; font-weight: 700; padding: 0 18px; height: 50px; }
-  .btn.sec { background: var(--key); color: var(--text); }
-  .btn.wide { width: 100%; margin-top: 10px; }
-  .btn.link { background: transparent; color: var(--danger); }
-  .btn.mini { height: 38px; font-size: 14px; padding: 0 12px; }
-
-  /* Ayarlar ve düzeltme pencereleri */
+  /* Pencereler: geçmiş, düzeltme, ayarlar */
   .sheet {
     position: fixed; inset: 0; background: var(--bg); color: var(--text); display: none; flex-direction: column;
     padding: calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 16px);
@@ -161,20 +106,39 @@
   }
   .sheet.open { display: flex; }
   .sheet-inner { max-width: 480px; width: 100%; margin: 0 auto; }
-  .sheet h2 { font-size: 28px; margin: 8px 0 8px; }
+  .sheet-head { display: flex; align-items: center; justify-content: space-between; }
+  .sheet h2 { font-size: 28px; margin: 8px 0; }
   .sheet .intro { font-size: 16px; color: var(--muted); margin: 0 0 18px; }
+  .sheet h3 { font-size: 18px; margin: 20px 0 10px; }
   .field { margin-bottom: 20px; }
   .field > label { display: block; font-size: 17px; color: var(--muted); margin-bottom: 8px; }
   .hint { font-size: 14px; color: var(--muted); margin-top: 6px; }
   .err { color: var(--danger); font-size: 16px; min-height: 22px; margin-bottom: 8px; }
-  .seg { display: flex; gap: 6px; margin-top: 8px; }
-  .seg button, .chips button {
+  input.f {
+    width: 100%; font-size: 24px; padding: 12px 16px; border-radius: 14px;
     border: 2px solid var(--key); background: var(--surface); color: var(--text);
-    border-radius: 20px; padding: 8px 14px; font-size: 15px;
   }
-  .seg button { flex: 1; }
-  .seg button.on, .chips button.on { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+  input.f:focus { outline: none; border-color: var(--accent); }
+  .btn { width: 100%; border: 0; border-radius: 14px; background: var(--accent); color: var(--accent-text); font-size: 20px; font-weight: 800; height: 58px; margin-top: 10px; }
+  .btn.sec { background: var(--key); color: var(--text); font-weight: 600; }
+  .btn.link { background: transparent; color: var(--danger); font-weight: 600; }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chips button { border: 2px solid var(--key); background: var(--surface); color: var(--text); border-radius: 20px; padding: 8px 14px; font-size: 16px; }
+  .chips button.on { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+  .card { background: var(--surface); border-radius: 16px; padding: 14px 16px; margin-bottom: 10px; }
+  .card h4 { margin: 0 0 6px; font-size: 15px; color: var(--muted); font-weight: 600; }
+  .row { display: flex; justify-content: space-between; gap: 10px; font-size: 17px; padding: 3px 0; font-variant-numeric: tabular-nums; }
+  .res { font-weight: 700; margin-top: 6px; }
+  .good { color: var(--accent); }
+  .badc { color: var(--danger); }
+  .item {
+    display: flex; align-items: center; gap: 10px; width: 100%; border: 0; text-align: left; color: var(--text);
+    background: var(--surface); border-radius: 12px; padding: 10px 12px; margin-bottom: 6px; font-size: 16px;
+  }
+  .item .meta { flex: 1; min-width: 0; }
+  .item .sub { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .item .amt { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .muted { color: var(--muted); font-size: 15px; text-align: center; padding: 12px 0; }
 
   .toast {
     position: fixed; left: 50%; top: calc(env(safe-area-inset-top) + 12px); transform: translateX(-50%);
@@ -184,128 +148,52 @@
   }
   .toast.show { opacity: 1; pointer-events: auto; }
   .toast button { border: 0; background: var(--bg); color: var(--text); border-radius: 16px; font-size: 14px; font-weight: 700; padding: 6px 12px; }
-  .toast button[hidden] { display: none; }
 
   @media (max-height: 700px) {
-    .big { font-size: clamp(44px, 15vw, 70px); margin: 0 0 4px; }
+    .big { font-size: clamp(48px, 16vw, 76px); margin: 0 0 6px; }
     .label { font-size: 15px; }
-    .line, .barlbl { font-size: 13px; }
-    .entry { font-size: 28px; min-height: 46px; padding: 4px 14px; margin: 6px 0; }
+    .line, .barlbl, .alert { font-size: 14px; }
+    .entry { font-size: 30px; min-height: 48px; padding: 4px 14px; margin: 8px 0 6px; }
     .pad { gap: 5px; }
-    .pad button { font-size: 24px; }
+    .pad button { font-size: 26px; }
     .cats { gap: 5px; margin-top: 6px; }
-    .cats button { font-size: 16px; }
-    .sign { font-size: 18px; margin-top: 2px; }
-    .tabs button { padding: 10px 0 8px; }
-    .remind { margin-top: 4px; padding: 4px 4px 4px 10px; font-size: 13px; }
+    .cats button { font-size: 17px; }
+    .sign { font-size: 19px; margin-top: 3px; }
   }
 </style>
 </head>
 <body>
 <div class="app">
-
-  <!-- Bugün -->
-  <section class="view on" id="v-today">
-    <div class="top">
-      <span class="title" id="periodTitle"></span>
-      <button class="icon-btn" id="openSettings" aria-label="Ayarlar">⚙︎</button>
-    </div>
-    <div class="hero">
-      <div class="label" id="label">Bugün harcayabileceğin</div>
-      <div class="big" id="big">–</div>
-      <div class="bar" id="bar"><i></i></div>
-      <div class="barlbl"><span id="barTxt"></span><span id="barPct"></span></div>
-      <div class="alert" id="alert"></div>
-      <div class="line" id="leftLine"></div>
-      <div class="line" id="cardLine"></div>
-      <div class="remind" id="remind" hidden><span id="remindTxt"></span><button id="remindPay">Ödedim</button></div>
-    </div>
-    <div class="entry empty" id="entry">Tutar</div>
-    <div class="pad" id="pad">
-      <button>1</button><button>2</button><button>3</button>
-      <button>4</button><button>5</button><button>6</button>
-      <button>7</button><button>8</button><button>9</button>
-      <button>,</button><button>0</button><button aria-label="Sil">⌫</button>
-    </div>
-    <div class="cats off" id="cats"></div>
-    <div class="sign">Flagellumdei, MD</div>
-  </section>
-
-  <!-- Harcamalar -->
-  <section class="view scroll" id="v-list">
-    <div class="top"><h2>Harcamalar</h2></div>
-    <div class="card" id="listHead"></div>
-    <div id="expList"></div>
-  </section>
-
-  <!-- Birikim -->
-  <section class="view scroll" id="v-save">
-    <div class="top"><h2>Birikim</h2></div>
-    <div class="card" id="invCard"></div>
-    <div class="card" id="yearCard"></div>
-    <h3 class="sec-title">Dönemler</h3>
-    <div id="periodList"></div>
-    <div class="sign" style="margin:16px 0 8px">Flagellumdei, MD</div>
-  </section>
-
-  <nav class="tabs" id="tabs">
-    <button data-v="v-today" class="on">Bugün</button>
-    <button data-v="v-list">Harcamalar</button>
-    <button data-v="v-save">Birikim</button>
-  </nav>
+  <div class="top">
+    <span class="title" id="periodTitle"></span>
+    <button class="pill" id="openHistory">Geçmiş</button>
+    <button class="icon-btn" id="openSettings" aria-label="Ayarlar">⚙︎</button>
+  </div>
+  <div class="hero">
+    <div class="label" id="label">Bugün harcayabileceğin</div>
+    <div class="big" id="big">–</div>
+    <div class="bar" id="bar"><i></i></div>
+    <div class="barlbl"><span id="barTxt"></span><span id="barPct"></span></div>
+    <div class="alert" id="alert"></div>
+    <div class="line" id="leftLine"></div>
+  </div>
+  <div class="entry empty" id="entry">Tutar</div>
+  <div class="pad" id="pad">
+    <button>1</button><button>2</button><button>3</button>
+    <button>4</button><button>5</button><button>6</button>
+    <button>7</button><button>8</button><button>9</button>
+    <button>,</button><button>0</button><button aria-label="Sil">⌫</button>
+  </div>
+  <div class="cats off" id="cats"></div>
+  <div class="sign">Flagellumdei, MD</div>
 </div>
 
-<!-- Ayarlar -->
-<div class="sheet" id="sheet">
+<!-- Geçmiş -->
+<div class="sheet" id="historySheet">
   <div class="sheet-inner">
-    <h2>Ayarlar</h2>
-    <p class="intro" id="intro">Bu bilgiler yalnızca bu telefonda saklanır.</p>
-    <div class="field">
-      <label for="budget">Aylık harcama bütçesi (TL)</label>
-      <input class="f" id="budget" type="text" inputmode="decimal">
-      <div class="seg" id="budgetMode">
-        <button data-m="now">Bu dönemden</button>
-        <button data-m="next" class="on">Sonraki dönemden</button>
-      </div>
-      <div class="hint" id="budgetHint">Değiştirirsen ne zaman geçerli olacağını seç. Geçmiş dönemler eski bütçeyle kalır.</div>
-    </div>
-    <div class="field">
-      <label for="startDay">Dönem başlangıç günü</label>
-      <input class="f" id="startDay" type="text" inputmode="numeric">
-      <div class="hint" id="startHint">Değiştirirsen yeni gün, bir sonraki o günde başlar. Şu anki dönem o güne kadar sürer.</div>
-    </div>
-    <div class="field">
-      <label for="dueDay">Son ödeme günü</label>
-      <input class="f" id="dueDay" type="text" inputmode="numeric">
-    </div>
-    <div class="field">
-      <label for="periodBudget">Sadece bu dönemin bütçesi (TL)</label>
-      <input class="f" id="periodBudget" type="text" inputmode="decimal" placeholder="Boş = aylık bütçe">
-      <div class="hint" id="periodHint"></div>
-    </div>
-    <div class="field">
-      <label for="limit">Kart limiti (TL)</label>
-      <input class="f" id="limit" type="text" inputmode="decimal" placeholder="İsteğe bağlı">
-    </div>
-    <div class="field">
-      <label for="target">Aylık yatırım hedefi (TL)</label>
-      <input class="f" id="target" type="text" inputmode="decimal" placeholder="İsteğe bağlı">
-    </div>
-    <div class="err" id="err"></div>
-    <button class="btn wide" id="save">KAYDET</button>
-    <button class="btn sec wide" id="cancel">Vazgeç</button>
-
-    <div class="field" style="margin-top:32px">
-      <label>Bütçe dışı kart borcu</label>
-      <div class="hint" style="margin:0 0 10px">Kartta duran ama bütçeyle ilgisi olmayan borç. Kart borcuna ve limite sayılır, bütçeye sayılmaz. Buradaki değişiklikler hemen kaydedilir.</div>
-      <div id="offList"></div>
-      <div class="inline">
-        <input class="f" id="offAmt" type="text" inputmode="decimal" placeholder="Tutar" style="flex:2">
-        <input class="f" id="offNote" type="text" placeholder="Not" style="flex:3">
-      </div>
-      <button class="btn sec wide" id="offAdd">Borç ekle</button>
-    </div>
-    <div class="sign" style="margin-top:24px">Flagellumdei, MD</div>
+    <div class="sheet-head"><h2>Geçmiş</h2><button class="pill" id="closeHistory">Kapat</button></div>
+    <div id="historyBody"></div>
+    <div class="sign" style="margin-top:20px">Flagellumdei, MD</div>
   </div>
 </div>
 
@@ -327,9 +215,31 @@
       <input class="f" id="editNote" type="text">
     </div>
     <div class="err" id="editErr"></div>
-    <button class="btn wide" id="editSave">KAYDET</button>
-    <button class="btn sec wide" id="editCancel">Vazgeç</button>
-    <button class="btn link wide" id="editDel">Harcamayı sil</button>
+    <button class="btn" id="editSave">KAYDET</button>
+    <button class="btn sec" id="editCancel">Vazgeç</button>
+    <button class="btn link" id="editDel">Harcamayı sil</button>
+  </div>
+</div>
+
+<!-- Ayarlar -->
+<div class="sheet" id="sheet">
+  <div class="sheet-inner">
+    <h2>Ayarlar</h2>
+    <p class="intro" id="intro">Bu bilgiler yalnızca bu telefonda saklanır.</p>
+    <div class="field">
+      <label for="budget">Aylık bütçe (TL)</label>
+      <input class="f" id="budget" type="text" inputmode="decimal">
+      <div class="hint" id="budgetHint"></div>
+    </div>
+    <div class="field">
+      <label for="startDay">Dönem başlangıç günü</label>
+      <input class="f" id="startDay" type="text" inputmode="numeric">
+      <div class="hint" id="startHint"></div>
+    </div>
+    <div class="err" id="err"></div>
+    <button class="btn" id="save">KAYDET</button>
+    <button class="btn sec" id="cancel">Vazgeç</button>
+    <div class="sign" style="margin-top:24px">Flagellumdei, MD</div>
   </div>
 </div>
 
@@ -337,7 +247,8 @@
 
 <script>
 (function () {
-  var KEY = 'harcama-sayaci-v1';
+  // Yeni, sade sürüm: eski kayıtlara dokunmaz, kendi kayıt alanını kullanır
+  var KEY = 'harcama-sade-v1';
   var DAY = 86400000;
   var CATS = [['market', 'Market'], ['yemek', 'Yemek'], ['yakit', 'Yakıt'], ['fatura', 'Fatura'], ['diger', 'Diğer']];
   var CAT_NAME = {};
@@ -351,32 +262,20 @@
   function today() { return midnight(new Date()); }
   function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
 
-  // ---- Veri (yalnızca bu telefonda, localStorage) ----
-  // Kodda hiçbir kişisel tutar yok; hepsi telefonda ayarlardan girilir.
+  // ---- Veri (yalnızca bu telefonda). Kodda hiçbir kişisel tutar yok. ----
   function load() {
     var d = null;
     try { d = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
     if (!d || !Array.isArray(d.expenses)) d = { expenses: [] };
-    // Eski sürümlerden taşıma: kategorisiz harcamalar "Diğer" olur
-    d.expenses = d.expenses.filter(function (e) { return !e.o; }).map(function (e) {
-      return { id: e.id || uid(), t: e.t, a: e.a, c: CAT_NAME[e.c] ? e.c : 'diger', n: e.n || '' };
-    });
-    if (!d.periodBudgets) d.periodBudgets = {};
-    if (!d.since) d.since = today().getTime();                       // takibe başlanan gün
-    // Aylık bütçe ve başlangıç günü geçmişi: [{from: tarih, ...}], eskiden yeniye
-    if (!Array.isArray(d.budgets)) d.budgets = d.budget > 0 ? [{ from: 0, amount: d.budget }] : [];
-    if (!Array.isArray(d.startDays)) d.startDays = d.startDay >= 1 ? [{ from: 0, day: d.startDay }] : [];
-    if (!Array.isArray(d.invest)) d.invest = [];
-    if (!Array.isArray(d.offBudget)) d.offBudget = [];
-    if (!d.paid) d.paid = {};
-    delete d.carryFrom;                                               // artan artık devretmiyor
+    if (!Array.isArray(d.budgets)) d.budgets = [];       // [{from, amount}] aylık bütçe geçmişi
+    if (!Array.isArray(d.startDays)) d.startDays = [];   // [{from, day}] başlangıç günü geçmişi
     return d;
   }
   function save() {
     try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
   }
   var state = load();
-  function configured() { return state.budgets.length > 0 && state.startDays.length > 0 && state.dueDay >= 1; }
+  function configured() { return state.budgets.length > 0 && state.startDays.length > 0 && state.since > 0; }
 
   // ---- Dönemler ----
   function startDayAt(t) {
@@ -384,7 +283,7 @@
     state.startDays.forEach(function (e) { if (e.from <= t) day = e.day; });
     return day;
   }
-  // Bir dönemin bitişi: normalde bir ay sonra; başlangıç günü değiştiyse yeni günün ilk geldiği gün
+  // Dönem bir ay sürer; başlangıç günü değiştiyse yeni günün ilk geldiği gün biter
   function nextStart(start) {
     var best = dayIn(start.getFullYear(), start.getMonth() + 1, startDayAt(start.getTime()));
     state.startDays.forEach(function (e) {
@@ -392,15 +291,14 @@
     });
     return best;
   }
-  function firstStart() {
-    var s = midnight(new Date(Math.min(state.since, today().getTime())));
-    var day = state.startDays[0].day;
-    var st = dayIn(s.getFullYear(), s.getMonth(), day);
-    if (s < st) st = dayIn(s.getFullYear(), s.getMonth() - 1, day);
+  function periodOf(d, day) {
+    var st = dayIn(d.getFullYear(), d.getMonth(), day);
+    if (d < st) st = dayIn(d.getFullYear(), d.getMonth() - 1, day);
     return st;
   }
   function periods() {
-    var t = today(), out = [], s = firstStart();
+    var t = today(), out = [];
+    var s = periodOf(midnight(new Date(Math.min(state.since, t.getTime()))), state.startDays[0].day);
     for (var i = 0; i < 600; i++) {
       var n = nextStart(s);
       out.push({ start: s, next: n });
@@ -409,58 +307,27 @@
     }
     return out;
   }
-  function currentPeriod() { var p = periods(); return p[p.length - 1]; }
-
-  // Bir dönemin temel bütçesi: o döneme özel bütçe, yoksa o tarihte geçerli aylık bütçe
-  function baseFor(start) {
-    var t = start.getTime();
-    if (state.periodBudgets[t] > 0) return state.periodBudgets[t];
+  function budgetAt(t) {
     var amount = state.budgets[0].amount;
     state.budgets.forEach(function (b) { if (b.from <= t) amount = b.amount; });
     return amount;
   }
 
-  // Her dönemin özeti (en eskisi başta). Aşım sonraki dönemden düşer, artan devretmez.
+  // Her dönem (en eskisi başta). Aşım sonraki dönemden düşer, artan devretmez.
+  // Dönemin ortasında başlanan ilk dönemin bütçesi kalan gün sayısına göre ayarlanır.
   function history() {
     var t = today(), over = 0;
     return periods().map(function (p) {
-      var base = baseFor(p.start), budget = base - over;
       var from = Math.max(p.start.getTime(), state.since), to = p.next.getTime();
-      var spent = 0, cats = {}, inv = 0;
-      state.expenses.forEach(function (e) {
-        if (e.t >= from && e.t < to) { spent += e.a; cats[e.c] = (cats[e.c] || 0) + e.a; }
-      });
-      state.invest.forEach(function (x) { if (x.t >= p.start.getTime() && x.t < to) inv += x.a; });
-      var end = new Date(to - DAY);
-      var due = dayIn(end.getFullYear(), end.getMonth(), state.dueDay);
-      if (due <= end) due = dayIn(end.getFullYear(), end.getMonth() + 1, state.dueDay);
-      var h = { start: p.start, from: new Date(from), next: p.next, end: end, due: due,
-                base: base, budget: budget, carried: over, spent: spent, cats: cats, invest: inv,
-                current: p.next > t, paid: !!state.paid[p.start.getTime()] };
-      over = Math.max(0, spent - budget);
+      var base = budgetAt(p.start.getTime());
+      if (from > p.start.getTime()) base = Math.round(base * dayDiff(new Date(from), p.next) / dayDiff(p.start, p.next));
+      var spent = 0;
+      state.expenses.forEach(function (e) { if (e.t >= from && e.t < to) spent += e.a; });
+      var h = { start: p.start, from: new Date(from), next: p.next, end: new Date(to - DAY),
+                budget: base - over, carried: over, spent: spent, current: p.next > t };
+      over = Math.max(0, spent - h.budget);
       return h;
     });
-  }
-
-  function compute() {
-    var t = today(), tomorrow = new Date(t.getFullYear(), t.getMonth(), t.getDate() + 1);
-    var h = history(), cur = h[h.length - 1];
-    var spentToday = 0;
-    state.expenses.forEach(function (e) { if (e.t >= t.getTime() && e.t < tomorrow.getTime()) spentToday += e.a; });
-    var daysLeft = dayDiff(t, cur.next);                             // bugün dahil
-    var start = new Date(Math.min(t.getTime(), cur.from.getTime()));
-    var elapsed = dayDiff(start, t) + 1, total = dayDiff(start, cur.next);
-    var unpaid = h.filter(function (x) { return !x.current && !x.paid && x.spent > 0; });
-    var off = 0;
-    state.offBudget.forEach(function (o) { if (!o.paid) off += o.a; });
-    var debt = off + cur.spent;
-    unpaid.forEach(function (x) { debt += x.spent; });
-    return {
-      h: h, cur: cur, daysLeft: daysLeft,
-      todayLeft: (cur.budget - (cur.spent - spentToday)) / daysLeft - spentToday,
-      projection: cur.spent / elapsed * total,
-      unpaid: unpaid, debt: debt
-    };
   }
 
   // ---- Biçimlendirme ----
@@ -469,18 +336,14 @@
   function tlExact(n) { return n.toLocaleString('tr-TR', { maximumFractionDigits: 2 }) + ' ₺'; }
   function dateTxt(d) { return d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' }); }
   function dateShort(d) { return d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' }); }
-  // "1 Ekim'de", "1 Kasım'da", "1 Aralık'ta" — ek ay adına göre değişir
+  function timeTxt(d) { return d.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }); }
+  // "1 Ekim'de", "1 Kasım'da" — ek ay adına göre değişir
   var LOC = ['ta', 'ta', 'ta', 'da', 'ta', 'da', 'da', 'ta', 'de', 'de', 'da', 'ta'];
   function dateLoc(d) { return dateTxt(d) + '’' + LOC[d.getMonth()]; }
-  function dateAbl(d) { return dateTxt(d) + '’' + LOC[d.getMonth()] + 'n'; }   // "1 Ekim'den", "1 Kasım'dan"
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function parseAmount(s) {
     var n = parseFloat(String(s).replace(/\./g, '').replace(',', '.'));
     return isFinite(n) ? Math.round(n * 100) / 100 : 0;
-  }
-  function catLine(cats) {
-    return CATS.filter(function (c) { return cats[c[0]] > 0; })
-      .map(function (c) { return c[1] + ' ' + tl(cats[c[0]]); }).join(' · ');
   }
 
   var toastTimer, toastUndo = null;
@@ -498,21 +361,26 @@
     $('toast').classList.remove('show');
   });
 
-  // ---- Bugün ----
+  // ---- Ana ekran ----
   var typed = '';
-  function renderToday(c) {
-    var cur = c.cur;
+  function render() {
+    if (!configured()) return;
+    var t = today(), tomorrow = new Date(t.getFullYear(), t.getMonth(), t.getDate() + 1);
+    var h = history(), cur = h[h.length - 1];
+    var spentToday = 0;
+    state.expenses.forEach(function (e) { if (e.t >= t.getTime() && e.t < tomorrow.getTime()) spentToday += e.a; });
+    var daysLeft = dayDiff(t, cur.next);                               // bugün dahil
+    var v = Math.round((cur.budget - (cur.spent - spentToday)) / daysLeft - spentToday);
+
     $('periodTitle').textContent = dateShort(cur.from) + ' – ' + dateShort(cur.end);
-    var v = Math.round(c.todayLeft);
     $('big').innerHTML = (v < 0 ? '−' : '') + Math.abs(v).toLocaleString('tr-TR') + '<small>₺</small>';
     $('big').classList.toggle('neg', v < 0);
     $('label').textContent = v < 0 ? 'Bugünkü payını aştın' : 'Bugün harcayabileceğin';
 
     var pct = cur.budget > 0 ? cur.spent / cur.budget : (cur.spent > 0 ? 9 : 0);
-    var bar = $('bar');
-    bar.firstElementChild.style.width = Math.min(100, pct * 100) + '%';
-    bar.classList.toggle('warn', pct >= 0.8 && pct < 1);
-    bar.classList.toggle('bad', pct >= 1);
+    $('bar').firstElementChild.style.width = Math.min(100, pct * 100) + '%';
+    $('bar').classList.toggle('warn', pct >= 0.8 && pct < 1);
+    $('bar').classList.toggle('bad', pct >= 1);
     $('barTxt').textContent = tl(cur.spent) + ' / ' + tl(cur.budget);
     $('barPct').textContent = '%' + Math.round(pct * 100);
     var al = $('alert');
@@ -520,25 +388,12 @@
     else if (pct >= 0.8) { al.className = 'alert warn'; al.textContent = 'Bütçenin %80’ini geçtin'; }
     else if (cur.carried > 0) { al.className = 'alert info'; al.textContent = 'Geçen dönemden ' + tl(cur.carried) + ' aşım düşüldü'; }
     else { al.className = 'alert'; al.textContent = ''; }
-
-    $('leftLine').innerHTML = 'Kalan <b>' + tl(cur.budget - cur.spent) + '</b> · ' + c.daysLeft + ' gün';
-    $('cardLine').innerHTML = 'Kart borcu <b>' + tl(c.debt) + '</b>' +
-      (state.limit > 0 ? ' · Kalan limit <b' + (state.limit - c.debt < 0 ? ' class="badc"' : '') + '>' + tl(state.limit - c.debt) + '</b>' : '');
-
-    var u = c.unpaid[0], rm = $('remind');
-    rm.hidden = !u;
-    if (u) {
-      var t = today().getTime(), due = u.due.getTime();
-      rm.className = 'remind' + (t === due ? ' warn' : t > due ? ' bad' : '');
-      $('remindTxt').textContent = t === due ? 'Bugün son ödeme günü: ' + tl(u.spent)
-        : t > due ? 'Son ödeme günü geçti: ' + tl(u.spent)
-        : 'Ekstre ' + tl(u.spent) + ' · son ödeme ' + dateTxt(u.due);
-      $('remindPay').dataset.p = u.start.getTime();
-    }
+    $('leftLine').innerHTML = 'Kalan <b>' + tl(cur.budget - cur.spent) + '</b> · ' + daysLeft + ' gün';
 
     $('entry').textContent = typed ? typed + ' ₺' : 'Tutar';
     $('entry').classList.toggle('empty', !typed);
     $('cats').classList.toggle('off', !(parseAmount(typed) > 0));
+    if ($('historySheet').classList.contains('open')) renderHistory();
   }
 
   $('cats').innerHTML = CATS.map(function (c) { return '<button data-c="' + c[0] + '">' + c[1] + '</button>'; }).join('');
@@ -551,8 +406,8 @@
     else if (k === ',') { if (typed.indexOf(',') === -1) typed = (typed || '0') + ','; }
     else {
       var parts = typed.split(',');
-      if (parts[1] !== undefined && parts[1].length >= 2) return;   // en fazla 2 kuruş hanesi
-      if (parts[1] === undefined && parts[0].length >= 7) return;   // makul üst sınır
+      if (parts[1] !== undefined && parts[1].length >= 2) return;     // en fazla 2 kuruş hanesi
+      if (parts[1] === undefined && parts[0].length >= 7) return;     // makul üst sınır
       typed = (typed === '0') ? k : typed + k;
     }
     render();
@@ -576,49 +431,49 @@
     });
   });
 
-  $('remindPay').addEventListener('click', function () {
-    var p = this.dataset.p;
-    if (!confirm('Bu ekstreyi ödendi olarak işaretleyeyim mi?')) return;
-    state.paid[p] = true;
-    save();
-    render();
-    toast('Ekstre ödendi');
-  });
-
-  // ---- Harcamalar ----
-  function renderList(c) {
-    var cur = c.cur;
-    var rows = CATS.map(function (k) {
-      var v = cur.cats[k[0]] || 0, pct = cur.spent > 0 ? v / cur.spent * 100 : 0;
-      return '<div class="catrow"><span>' + k[1] + '</span><div class="bar"><i style="width:' + pct + '%"></i></div><span>' + tl(v) + '</span></div>';
-    }).join('');
-    $('listHead').innerHTML = '<h4>' + dateTxt(cur.from) + ' – ' + dateTxt(cur.end) + '</h4>' +
-      '<div class="row"><span>Harcanan</span><b>' + tl(cur.spent) + '</b></div>' +
-      '<div class="small" style="margin:2px 0 10px">Bu gidişle ' + dateLoc(cur.due) + ' ödeyeceğin ekstre ' + tl(c.projection) + '</div>' +
-      rows;
+  // ---- Geçmiş ----
+  function renderHistory() {
+    var h = history(), cur = h[h.length - 1];
     var from = cur.from.getTime(), to = cur.next.getTime();
     var list = state.expenses.filter(function (e) { return e.t >= from && e.t < to; })
       .sort(function (a, b) { return b.t - a.t; });
-    $('expList').innerHTML = list.length ? list.map(function (e) {
+    var html = '<h3>Bu dönem · ' + dateTxt(cur.from) + ' – ' + dateTxt(cur.end) + '</h3>';
+    html += list.length ? list.map(function (e) {
       var d = new Date(e.t);
       return '<button class="item" data-id="' + e.id + '"><div class="meta"><div>' + CAT_NAME[e.c] + '</div>' +
-        '<div class="sub">' + dateShort(d) + ' ' + d.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }) +
-        (e.n ? ' · ' + esc(e.n) : '') + '</div></div><div class="amt">' + tlExact(e.a) + '</div></button>';
-    }).join('') + '<div class="small" style="text-align:center;margin:8px 0 16px">Düzeltmek ya da silmek için harcamaya dokun.</div>'
-      : '<div class="empty-note">Bu dönem henüz harcama yok.</div>';
+        '<div class="sub">' + dateShort(d) + ' ' + timeTxt(d) + (e.n ? ' · ' + esc(e.n) : '') + '</div></div>' +
+        '<div class="amt">' + tlExact(e.a) + '</div></button>';
+    }).join('') + '<div class="muted">Düzeltmek ya da silmek için harcamaya dokun.</div>'
+      : '<div class="muted">Bu dönem henüz harcama yok.</div>';
+
+    var done = h.filter(function (x) { return !x.current; }).reverse();
+    if (done.length) {
+      html += '<h3>Biten dönemler</h3>' + done.map(function (x) {
+        var diff = x.budget - x.spent;
+        return '<div class="card"><h4>' + dateTxt(x.from) + ' – ' + dateTxt(x.end) + '</h4>' +
+          '<div class="row"><span>Bütçe</span><span>' + tl(x.budget) + '</span></div>' +
+          '<div class="row"><span>Harcanan</span><span>' + tl(x.spent) + '</span></div>' +
+          (diff >= 0 ? '<div class="res good">' + tl(diff) + ' biriktirilebilir</div>'
+                     : '<div class="res badc">' + tl(-diff) + ' aşım · sonraki dönemden düşüldü</div>') + '</div>';
+      }).join('');
+    }
+    $('historyBody').innerHTML = html;
   }
-  $('expList').addEventListener('click', function (ev) {
+  $('openHistory').addEventListener('click', function () { renderHistory(); $('historySheet').classList.add('open'); });
+  $('closeHistory').addEventListener('click', function () { $('historySheet').classList.remove('open'); });
+  $('historyBody').addEventListener('click', function (ev) {
     var b = ev.target.closest('.item');
     if (b) openEdit(b.dataset.id);
   });
 
+  // ---- Düzeltme ----
   var editId = null, editCat = null;
   function openEdit(id) {
     var e = state.expenses.filter(function (x) { return x.id === id; })[0];
     if (!e) return;
     editId = id; editCat = e.c;
     var d = new Date(e.t);
-    $('editWhen').textContent = dateTxt(d) + ' ' + d.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+    $('editWhen').textContent = dateTxt(d) + ' ' + timeTxt(d);
     $('editAmt').value = String(e.a).replace('.', ',');
     $('editNote').value = e.n || '';
     $('editErr').textContent = '';
@@ -655,157 +510,44 @@
     toast('Silindi');
   });
 
-  // ---- Birikim ----
-  function renderSave(c) {
-    var cur = c.cur, target = state.target > 0 ? state.target : 0;
-    var reached = target > 0 && cur.invest >= target;
-    var from = cur.start.getTime(), to = cur.next.getTime();
-    var entries = state.invest.filter(function (x) { return x.t >= from && x.t < to; })
-      .sort(function (a, b) { return b.t - a.t; });
-    $('invCard').innerHTML = '<h4>Bu dönem yatırıma gönderilen</h4>' +
-      '<div class="row" style="font-size:24px"><b' + (reached ? ' class="good"' : '') + '>' + tl(cur.invest) + '</b>' +
-      (target ? '<span class="small" style="align-self:center">hedef ' + tl(target) + '</span>' : '') + '</div>' +
-      (target ? '<div class="bar"><i style="width:' + Math.min(100, cur.invest / target * 100) + '%"></i></div>' +
-        '<div class="res ' + (reached ? 'good' : '') + '" style="margin:4px 0 10px">' +
-        (reached ? '✓ Hedefe ulaştın' : 'Hedefe ' + tl(target - cur.invest) + ' kaldı') + '</div>'
-        : '<div class="small" style="margin:4px 0 10px">Hedef belirlemek için ayarlara aylık yatırım hedefini yaz.</div>') +
-      '<div class="inline"><input class="f" id="invAmt" type="text" inputmode="decimal" placeholder="Gönderdiğin tutar">' +
-      '<button class="btn" id="invAdd">Ekle</button></div>' +
-      entries.map(function (x) {
-        return '<div class="item" style="margin:8px 0 0;padding:4px 4px 4px 12px"><div class="meta">' + dateTxt(new Date(x.t)) +
-          '</div><div class="amt">' + tlExact(x.a) + '</div><button class="x" data-inv="' + x.id + '" aria-label="Sil">×</button></div>';
-      }).join('');
-
-    var y = new Date().getFullYear(), base = 0, spent = 0, n = 0, inv = 0;
-    c.h.forEach(function (h) {
-      if (!h.current && h.end.getFullYear() === y) { base += h.base; spent += h.spent; n++; }
-    });
-    state.invest.forEach(function (x) { if (new Date(x.t).getFullYear() === y) inv += x.a; });
-    $('yearCard').innerHTML = '<h4>' + y + ' toplamı</h4>' +
-      '<div class="row"><span>Yatırıma giden</span><b>' + tl(inv) + '</b></div>' +
-      (n ? '<div class="row"><span>Biriktirilebilir (net)</span><b class="' + (base - spent >= 0 ? 'good' : 'badc') + '">' + tl(base - spent) + '</b></div>' +
-           '<div class="small">' + n + ' biten dönemin bütçesinden harcamadığın tutar</div>'
-         : '<div class="small">Bu yıl henüz biten dönem yok.</div>');
-
-    $('periodList').innerHTML = c.h.slice().reverse().map(function (h) {
-      var diff = h.budget - h.spent;
-      var res = h.current
-        ? (diff >= 0 ? '<div class="res good">Şimdilik ' + tl(diff) + ' kaldı</div>' : '<div class="res badc">Şimdilik ' + tl(-diff) + ' aşıldı</div>')
-        : (diff >= 0 ? '<div class="res good">' + tl(diff) + ' biriktirilebilir</div>'
-                     : '<div class="res badc">' + tl(-diff) + ' aşım · sonraki dönemden düşüldü</div>');
-      var invTxt = tl(h.invest) + (target ? (h.invest >= target ? ' <span class="good">✓</span>' : ' / ' + tl(target)) : '');
-      var stmt = h.current || h.spent === 0 ? '' : h.paid
-        ? '<div class="small" style="margin-top:6px">Ekstre ödendi</div>'
-        : '<div class="row" style="margin-top:6px;align-items:center"><span class="small">Ekstre ödenmedi · son ödeme ' + dateTxt(h.due) +
-          '</span><button class="btn sec mini" data-pay="' + h.start.getTime() + '">Ödedim</button></div>';
-      var cl = catLine(h.cats);
-      return '<div class="card"><h4>' + dateTxt(h.from) + ' – ' + dateTxt(h.end) + (h.current ? ' · devam ediyor' : '') + '</h4>' +
-        '<div class="row"><span>Bütçe</span><span>' + tl(h.budget) +
-          (h.carried > 0 ? ' <small class="small">(' + tl(h.carried) + ' aşım düşüldü)</small>' : '') + '</span></div>' +
-        '<div class="row"><span>Harcanan</span><span>' + tl(h.spent) + '</span></div>' +
-        '<div class="row"><span>Yatırıma</span><span>' + invTxt + '</span></div>' +
-        (cl ? '<div class="small" style="margin-top:4px">' + cl + '</div>' : '') +
-        res + stmt + '</div>';
-    }).join('');
-  }
-  $('v-save').addEventListener('click', function (ev) {
-    var t = ev.target;
-    if (t.id === 'invAdd') {
-      var a = parseAmount($('invAmt').value);
-      if (!(a > 0)) { toast('Önce tutarı yaz'); return; }
-      state.invest.push({ id: uid(), t: Date.now(), a: a });
-      save();
-      render();
-      toast(tlExact(a) + ' yatırıma eklendi');
-    } else if (t.dataset.inv) {
-      if (!confirm('Bu yatırım kaydı silinsin mi?')) return;
-      state.invest = state.invest.filter(function (x) { return x.id !== t.dataset.inv; });
-      save();
-      render();
-    } else if (t.dataset.pay) {
-      if (!confirm('Bu ekstreyi ödendi olarak işaretleyeyim mi?')) return;
-      state.paid[t.dataset.pay] = true;
-      save();
-      render();
-      toast('Ekstre ödendi');
-    }
-  });
-
-  // ---- Sekmeler ----
-  $('tabs').addEventListener('click', function (ev) {
-    var b = ev.target.closest('button');
-    if (!b) return;
-    [].forEach.call(document.querySelectorAll('.tabs button'), function (x) { x.classList.toggle('on', x === b); });
-    [].forEach.call(document.querySelectorAll('.view'), function (v) { v.classList.toggle('on', v.id === b.dataset.v); });
-  });
-
   // ---- Ayarlar ----
-  var budgetMode = 'next';
-  $('budgetMode').addEventListener('click', function (ev) {
-    var b = ev.target.closest('button');
-    if (!b) return;
-    budgetMode = b.dataset.m;
-    [].forEach.call(this.children, function (x) { x.classList.toggle('on', x === b); });
-  });
-
   function lastBudget() { return state.budgets[state.budgets.length - 1]; }
   function lastStartDay() { return state.startDays[state.startDays.length - 1]; }
+  function currentPeriod() { var p = periods(); return p[p.length - 1]; }
 
   function openSettings() {
     var first = !configured();
     $('intro').textContent = first
-      ? 'Başlamak için bilgilerini gir. Bunlar yalnızca bu telefonda saklanır.'
+      ? 'Başlamak için iki bilgiyi gir. Bunlar yalnızca bu telefonda saklanır.'
       : 'Bu bilgiler yalnızca bu telefonda saklanır.';
     $('cancel').style.display = first ? 'none' : '';
-    $('budgetMode').style.display = first ? 'none' : '';
     $('budget').value = first ? '' : String(lastBudget().amount);
     $('startDay').value = first ? '' : String(lastStartDay().day);
-    $('dueDay').value = state.dueDay ? String(state.dueDay) : '';
-    $('limit').value = state.limit > 0 ? String(state.limit) : '';
-    $('target').value = state.target > 0 ? String(state.target) : '';
-    $('periodBudget').value = '';
-    $('periodHint').textContent = 'Örneğin dönemin ortasında başladıysan. Sonraki dönemde aylık bütçeye döner.';
-    $('budgetHint').textContent = 'Değiştirirsen ne zaman geçerli olacağını seç. Geçmiş dönemler eski bütçeyle kalır.';
-    $('startHint').textContent = 'Değiştirirsen yeni gün, bir sonraki o günde başlar. Şu anki dönem o güne kadar sürer.';
-    if (!first) {
-      var cur = currentPeriod(), now = today().getTime();
-      var custom = state.periodBudgets[cur.start.getTime()];
-      if (custom) $('periodBudget').value = String(custom);
-      var from = new Date(Math.max(cur.start.getTime(), state.since));
-      $('periodHint').textContent = 'Bu dönem: ' + dateTxt(from) + ' – ' + dateTxt(new Date(cur.next.getTime() - DAY)) +
-        '. Sonraki dönemde aylık bütçeye döner.';
-      if (lastBudget().from > now) $('budgetHint').textContent = dateAbl(new Date(lastBudget().from)) + ' itibaren ' +
-        tl(lastBudget().amount) + ' olacak. Bu dönem: ' + tl(baseFor(cur.start)) + '.';
-      if (lastStartDay().from > now) $('startHint').textContent = 'Yeni dönem ' + dateLoc(new Date(lastStartDay().from)) +
-        ' başlayacak. Şu anki dönem ' + dateLoc(new Date(cur.next.getTime() - DAY)) + ' bitiyor.';
+    $('budgetHint').textContent = first
+      ? 'Dönemin ortasında başlıyorsan ilk dönemin bütçesi kalan günlere göre ayarlanır.'
+      : 'Değiştirirsen bu dönemden itibaren geçerli olur. Biten dönemler eski bütçeyle kalır.';
+    $('startHint').textContent = first
+      ? 'Kart ekstrenin kesim gününün ertesi günü.'
+      : 'Değiştirirsen yeni gün, bir sonraki o günde başlar.';
+    if (!first && lastStartDay().from > today().getTime()) {
+      $('startHint').textContent = 'Yeni dönem ' + dateLoc(new Date(lastStartDay().from)) + ' başlayacak.';
     }
     $('err').textContent = '';
-    renderOff();
     $('sheet').classList.add('open');
   }
-
   $('openSettings').addEventListener('click', openSettings);
   $('cancel').addEventListener('click', function () { $('sheet').classList.remove('open'); });
   $('save').addEventListener('click', function () {
     var b = parseAmount($('budget').value);
     var sd = parseInt($('startDay').value, 10);
-    var dd = parseInt($('dueDay').value, 10);
-    var pbRaw = $('periodBudget').value.trim(), pb = pbRaw ? parseAmount(pbRaw) : 0;
-    var limRaw = $('limit').value.trim(), lim = limRaw ? parseAmount(limRaw) : 0;
-    var tgRaw = $('target').value.trim(), tg = tgRaw ? parseAmount(tgRaw) : 0;
     if (!(b > 0)) { $('err').textContent = 'Aylık bütçe 0’dan büyük olmalı.'; return; }
     if (!(sd >= 1 && sd <= 31)) { $('err').textContent = 'Başlangıç günü 1 ile 31 arasında olmalı.'; return; }
-    if (!(dd >= 1 && dd <= 31)) { $('err').textContent = 'Son ödeme günü 1 ile 31 arasında olmalı.'; return; }
-    if (pbRaw && !(pb > 0)) { $('err').textContent = 'Dönem bütçesi 0’dan büyük olmalı ya da boş kalmalı.'; return; }
-    if (limRaw && !(lim > 0)) { $('err').textContent = 'Kart limiti 0’dan büyük olmalı ya da boş kalmalı.'; return; }
-    if (tgRaw && !(tg > 0)) { $('err').textContent = 'Yatırım hedefi 0’dan büyük olmalı ya da boş kalmalı.'; return; }
-
     var now = today();
     if (!configured()) {
+      state.since = now.getTime();                                      // takibe başlanan gün
       state.budgets = [{ from: 0, amount: b }];
       state.startDays = [{ from: 0, day: sd }];
     } else {
-      // Başlangıç günü: yeni gün bir sonraki o günde başlar
       if (sd !== lastStartDay().day) {
         state.startDays = state.startDays.filter(function (e) { return e.from <= now.getTime(); });
         if (startDayAt(now.getTime()) !== sd) {
@@ -814,80 +556,22 @@
           state.startDays.push({ from: cand.getTime(), day: sd });
         }
       }
-      // Aylık bütçe: bu dönemden ya da sonraki dönemden itibaren
       if (b !== lastBudget().amount) {
-        var cur = currentPeriod();
-        var from = (budgetMode === 'next' ? cur.next : cur.start).getTime();
-        state.budgets = state.budgets.filter(function (x) { return x.from < from; });
-        state.budgets.push({ from: state.budgets.length ? from : 0, amount: b });
+        var ps = currentPeriod().start.getTime();
+        state.budgets = state.budgets.filter(function (x) { return x.from < ps; });
+        state.budgets.push({ from: state.budgets.length ? ps : 0, amount: b });
       }
     }
-    state.dueDay = dd;
-    state.limit = lim;
-    state.target = tg;
-    state.budget = b; state.startDay = sd;                            // eski sürümlerle uyum için
-    var ps = currentPeriod().start.getTime();
-    if (pb > 0) state.periodBudgets[ps] = pb; else delete state.periodBudgets[ps];
     save();
     $('sheet').classList.remove('open');
     render();
     toast('Kaydedildi');
   });
 
-  // Bütçe dışı kart borcu
-  function renderOff() {
-    var open = state.offBudget.filter(function (o) { return !o.paid; });
-    $('offList').innerHTML = open.length ? open.map(function (o) {
-      return '<div class="item" style="padding:6px 6px 6px 12px"><div class="meta"><div class="amt">' + tlExact(o.a) + '</div>' +
-        (o.n ? '<div class="sub">' + esc(o.n) + '</div>' : '') + '</div>' +
-        '<button class="btn sec mini" data-edit="' + o.id + '">Tutarı değiştir</button>' +
-        '<button class="btn mini" data-paid="' + o.id + '">Ödendi</button></div>';
-    }).join('') : '<div class="small" style="margin-bottom:10px">Bütçe dışı borç yok.</div>';
-  }
-  $('offList').addEventListener('click', function (ev) {
-    var t = ev.target, id = t.dataset.edit || t.dataset.paid;
-    if (!id) return;
-    var o = state.offBudget.filter(function (x) { return x.id === id; })[0];
-    if (!o) return;
-    if (t.dataset.paid) {
-      if (!confirm(tlExact(o.a) + ' tutarındaki borç ödendi olarak işaretlensin mi?')) return;
-      o.paid = Date.now();
-    } else {
-      var v = prompt('Kalan borç tutarı (kısmi ödeme yaptıysan kalanı yaz):', String(o.a).replace('.', ','));
-      if (v === null) return;
-      var a = parseAmount(v);
-      if (!(a > 0)) { alert('Tutar 0’dan büyük olmalı. Tamamını ödediysen “Ödendi”ye bas.'); return; }
-      o.a = a;
-    }
-    save();
-    renderOff();
-    render();
-  });
-  $('offAdd').addEventListener('click', function () {
-    var a = parseAmount($('offAmt').value);
-    if (!(a > 0)) { toast('Önce tutarı yaz'); return; }
-    state.offBudget.push({ id: uid(), t: Date.now(), a: a, n: $('offNote').value.trim() });
-    $('offAmt').value = ''; $('offNote').value = '';
-    save();
-    renderOff();
-    render();
-    toast('Borç eklendi');
-  });
-
-  // ---- Çizim ----
-  function render() {
-    if (!configured()) return;
-    var c = compute();
-    renderToday(c);
-    renderList(c);
-    renderSave(c);
-  }
-
   // Gece yarısı geçince ve uygulamaya geri dönünce yeniden hesapla
   document.addEventListener('visibilitychange', function () { if (!document.hidden) render(); });
   setInterval(render, 60000);
 
-  save();
   if (configured()) render(); else openSettings();
 
   if ('serviceWorker' in navigator) {
